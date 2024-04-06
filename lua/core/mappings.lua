@@ -33,10 +33,26 @@ M.general = {
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
     -- empty mode is same as using <cmd> :map
     -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-    ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-    ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-    ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-    ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+    ["j"] = {
+      'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+      "Move down",
+      opts = { expr = true },
+    },
+    ["k"] = {
+      'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+      "Move up",
+      opts = { expr = true },
+    },
+    ["<Up>"] = {
+      'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+      "Move up",
+      opts = { expr = true },
+    },
+    ["<Down>"] = {
+      'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+      "Move down",
+      opts = { expr = true },
+    },
 
     -- new buffer
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
@@ -50,12 +66,23 @@ M.general = {
   },
 
   t = {
-    ["<C-x>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
+    ["<C-x>"] = {
+      vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true),
+      "Escape terminal mode",
+    },
   },
 
   v = {
-    ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-    ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+    ["<Up>"] = {
+      'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+      "Move up",
+      opts = { expr = true },
+    },
+    ["<Down>"] = {
+      'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+      "Move down",
+      opts = { expr = true },
+    },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
     ["<leader>fm"] = {
@@ -67,11 +94,23 @@ M.general = {
   },
 
   x = {
-    ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-    ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
+    ["j"] = {
+      'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+      "Move down",
+      opts = { expr = true },
+    },
+    ["k"] = {
+      'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+      "Move up",
+      opts = { expr = true },
+    },
     -- Don't copy the replaced text after pasting in visual mode
     -- https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text#Alternative_mapping_for_paste
-    ["p"] = { 'p:let @+=@0<CR>:let @"=@0<CR>', "Dont copy replaced text", opts = { silent = true } },
+    ["p"] = {
+      'p:let @+=@0<CR>:let @"=@0<CR>',
+      "Dont copy replaced text",
+      opts = { silent = true },
+    },
   },
 }
 
@@ -320,7 +359,10 @@ M.telescope = {
   n = {
     -- find
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
-    ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
+    ["<leader>fa"] = {
+      "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>",
+      "Find all",
+    },
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
@@ -328,9 +370,15 @@ M.telescope = {
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fg"] = { "<cmd> Telescope live_grep_args <CR>", "Live grep args" },
     ["<leader>fp"] = { "<cmd> Telescope project <CR>", "Find project" },
-    ["<leader>f/"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
+    ["<leader>f/"] = {
+      "<cmd> Telescope current_buffer_fuzzy_find <CR>",
+      "Find in current buffer",
+    },
     ["<leader>fe"] = { "<cmd> Telescope file_browser <CR>", "Telescope explorer" },
-    ["<leader>fE"] = { "<cmd> Telescope file_browser files=false <CR>", "Telescope explorer folders" },
+    ["<leader>fE"] = {
+      "<cmd> Telescope file_browser files=false <CR>",
+      "Telescope explorer folders",
+    },
     ["<leader>fn"] = {
       function()
         require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
@@ -359,8 +407,8 @@ M.telescope = {
     ["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
-    -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
-    ["<leader>pt"] = { "<cmd> TermSelect <CR>", "Pick hidden term" },
+    ["<leader>pt"] = { "<cmd> Telescope mterms <CR>", "Pick hidden term" },
+    -- ["<leader>pt"] = { "<cmd> TermSelect <CR>", "Pick hidden term" },
 
     -- theme switcher
     ["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
@@ -416,6 +464,121 @@ M.tterm = {
   },
 }
 
+M.mterm = {
+  plugin = true,
+  t = {
+    -- toggle in terminal mode
+    ["<A-v>"] = {
+      function()
+        require("minh_ui.term").toggle({ pos = "vsp" })
+      end,
+      "Toggle vertical term",
+    },
+
+    ["<A-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | lua require('minh_ui.term').toggle({pos = "float"})<CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
+    },
+
+    ["\\nht"] = {
+      function()
+        require("minh_ui.term").new({ pos = "sp", size = 0.3 })
+      end,
+      "New horizontal term",
+    },
+
+    ["\\nvt"] = {
+      function()
+        require("minh_ui.term").new({ pos = "vsp", size = 0.3 })
+      end,
+      "New vertical term",
+    },
+
+    ["\\ip"] = {
+      function()
+        require("minh_ui.term").new({ pos = "vsp", size = 0.35, cmd = "ipython" })
+      end,
+      "New ipython term",
+    },
+
+    ["\\lg"] = {
+      function()
+        require("minh_ui.term").new({
+          pos = "float",
+          cmd = "lazygit",
+          float_opts = {
+            col = 0,
+            row = 0,
+            height = 0.9,
+            width = 1,
+            border = "single",
+          },
+        })
+      end,
+      "Lazygit",
+    },
+  },
+  n = {
+    -- toggle in terminal mode
+    ["<A-h>"] = {
+      function()
+        require("minh_ui.term").toggle({ pos = "sp" })
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["<A-v>"] = {
+      function()
+        require("minh_ui.term").toggle({ pos = "vsp" })
+      end,
+      "Toggle vertical term",
+    },
+
+    ["<A-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | lua require('minh_ui.term').toggle {pos = "float"} <CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
+    },
+
+    ["\\nht"] = {
+      function()
+        require("minh_ui.term").new({ pos = "sp", size = 0.3 })
+      end,
+      "New horizontal term",
+    },
+
+    ["\\ip"] = {
+      function()
+        require("minh_ui.term").new({ pos = "vsp", size = 0.35, cmd = "ipython" })
+      end,
+      "New ipython term",
+    },
+
+    ["\\nvt"] = {
+      function()
+        require("minh_ui.term").new({ pos = "vsp", size = 0.3 })
+      end,
+      "New vertical term",
+    },
+
+    ["\\lg"] = {
+      function()
+        require("minh_ui.term").new({
+          pos = "float",
+          cmd = "lazygit",
+          float_opts = {
+            col = 0,
+            row = 0,
+            height = 0.9,
+            width = 1,
+            border = "single",
+          },
+        })
+      end,
+      "Lazygit",
+    },
+  },
+}
+
 M.nvterm = {
   plugin = true,
 
@@ -440,6 +603,11 @@ M.nvterm = {
         require("nvterm.terminal").toggle("vertical")
       end,
       "Toggle vertical term",
+    },
+
+    ["<C-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
     },
   },
 

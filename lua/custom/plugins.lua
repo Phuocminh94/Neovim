@@ -20,9 +20,21 @@ return {
   {
     "smoka7/hop.nvim",
     version = "*",
-    keys = { "f", "F", "t", "T", "vf", "vF", "vt", "vT", "gs", "<leader>yy", "<leader>pp" },
+    keys = {
+      "f",
+      "F",
+      "t",
+      "T",
+      "vf",
+      "vF",
+      "vt",
+      "vT",
+      "gs",
+      "<leader>yy",
+      "<leader>pp",
+    },
     config = function()
-      require "custom.configs.hop" ()
+      require("custom.configs.hop")()
       vim.cmd("highlight HopNextKey" .. " guifg='#4AF626'" .. "guibg=" .. vim.g.mylightbg)
     end,
   },
@@ -38,12 +50,12 @@ return {
     init = function()
       -- vim.cmd("highlight VisualMulti" .. " guibg='#ff007c'" .. " guifg='#ffffff'") -- same Hop color
       vim.api.nvim_set_hl(0, "VisualMulti", { link = "Visual" })
-      vim.cmd [[let g:VM_default_mappings = 0]]
-      vim.cmd [[let g:VM_Mono_hl = "VisualMulti"]]
-      vim.cmd [[let g:VM_Extend_hl = "VisualMulti"]]
-      vim.cmd [[let g:VM_Cursor_hl = "VisualMulti"]]
-      vim.cmd [[let g:VM_mouse_mappings = 1]]
-      vim.cmd [[let g:VM_leader = '\\\\']]
+      vim.cmd([[let g:VM_default_mappings = 0]])
+      vim.cmd([[let g:VM_Mono_hl = "VisualMulti"]])
+      vim.cmd([[let g:VM_Extend_hl = "VisualMulti"]])
+      vim.cmd([[let g:VM_Cursor_hl = "VisualMulti"]])
+      vim.cmd([[let g:VM_mouse_mappings = 1]])
+      vim.cmd([[let g:VM_leader = '\\\\']])
     end,
   },
 
@@ -58,7 +70,7 @@ return {
       "jay-babu/mason-nvim-dap.nvim",
     },
     config = function()
-      require "custom.configs.dapconfig"
+      require("custom.configs.dapconfig")
     end,
   },
 
@@ -66,7 +78,7 @@ return {
     "hkupty/iron.nvim",
     cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
     opts = function()
-      return require "custom.configs.iron"
+      return require("custom.configs.iron")
     end,
     config = function(_, opts)
       require("iron.core").setup(opts)
@@ -77,7 +89,7 @@ return {
     "HiPhish/rainbow-delimiters.nvim",
     event = "LspAttach",
     config = function()
-      require("rainbow-delimiters.setup").setup {}
+      require("rainbow-delimiters.setup").setup({})
     end,
   },
 
@@ -86,7 +98,12 @@ return {
     cmd = { "UndotreeToggle" },
     keys = { "<leader>ut" },
     config = function()
-      vim.keymap.set({ "i", "n", "v" }, "<leader>ut", ":UndotreeToggle<CR>", { desc = "Toggle undotree" })
+      vim.keymap.set(
+        { "i", "n", "v" },
+        "<leader>ut",
+        ":UndotreeToggle<CR>",
+        { desc = "Toggle undotree" }
+      )
     end,
   },
 
@@ -104,8 +121,8 @@ return {
       {
         "luukvbaal/statuscol.nvim",
         config = function()
-          local builtin = require "statuscol.builtin"
-          require("statuscol").setup {
+          local builtin = require("statuscol.builtin")
+          require("statuscol").setup({
             setopt = true,       -- Whether to set the 'statuscolumn' option, may be set to false for those who
             relculright = false, -- whether to right-align the cursor line number with 'relativenumber' set
             -- Builtin 'statuscolumn' options
@@ -134,14 +151,24 @@ return {
                 click = "v:lua.ScFa",
               },
             },
-          }
+          })
         end,
       },
     },
     config = function()
-      require "custom.configs.ufo"
-      vim.keymap.set("n", "zj", "<cmd>lua next_closed_fold('j') <CR>", { desc = "Previous closed fold" })
-      vim.keymap.set("n", "zk", "<cmd>lua next_closed_fold('k') <CR>", { desc = "Next closed fold" })
+      require("custom.configs.ufo")
+      vim.keymap.set(
+        "n",
+        "zj",
+        "<cmd>lua next_closed_fold('j') <CR>",
+        { desc = "Previous closed fold" }
+      )
+      vim.keymap.set(
+        "n",
+        "zk",
+        "<cmd>lua next_closed_fold('k') <CR>",
+        { desc = "Next closed fold" }
+      )
     end,
   },
 
@@ -149,7 +176,7 @@ return {
     "hedyhli/outline.nvim",
     keys = { "<leader>o" },
     opts = function()
-      return require "custom.configs.outline"
+      return require("custom.configs.outline")
     end,
     config = function(_, opts)
       -- Example mapping to toggle outline
@@ -202,7 +229,7 @@ return {
       "SessionDelete",
     },
     config = function()
-      require("persisted").setup {
+      require("persisted").setup({
         should_autosave = function()
           -- do not autosave if the alpha dashboard is the current filetype
           if vim.bo.filetype == "nvdash" then
@@ -210,7 +237,7 @@ return {
           end
           return true
         end,
-      }
+      })
     end,
   },
 
@@ -219,7 +246,7 @@ return {
     cmd = { "TZAtaraxis" },
     keys = { "<leader>z" },
     config = function()
-      require("true-zen").setup {}
+      require("true-zen").setup({})
       vim.keymap.set("n", "<leader>z", "<cmd>TZMinimalist<CR>", { desc = "Zen mode" })
     end,
   },
@@ -227,13 +254,14 @@ return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
+    enabled = false,
     keys = { "<A-\\>", "<C-\\>", "<A-v>", "<A-h>", "<leader>lg" },
     opts = function()
-      return require "custom.configs.tterm"
+      return require("custom.configs.tterm")
     end,
     config = function(_, opts)
       require("toggleterm").setup(opts)
-      require("core.utils").load_mappings "tterm"
+      require("core.utils").load_mappings("tterm")
     end,
   },
 
@@ -267,7 +295,7 @@ return {
       "MunifTanjim/nui.nvim",
     },
     config = function()
-      require("noice").setup(require "custom.configs.noice")
+      require("noice").setup(require("custom.configs.noice"))
     end,
   },
 
@@ -291,11 +319,45 @@ return {
     config = function()
       local key_opts = { noremap = true, silent = true }
       require("comment-box").setup()
-      vim.keymap.set({ "n", "v" }, "<leader>cbb", "<cmd>lua require 'comment-box'.cabox(9)<CR>", key_opts)
-      vim.keymap.set({ "n", "v" }, "<leader>cbl", "<cmd>lua require 'comment-box'.lcline(15)<CR>", key_opts)
-      vim.keymap.set({ "n", "v" }, "<leader>cbd", "<cmd>lua require('comment-box').dbox()<CR>", key_opts)
-      vim.keymap.set({ "n", "v" }, "<leader>cby", "<cmd>lua require('comment-box').yank()<CR>", key_opts)
-      vim.keymap.set({ "n" }, "<leader>cba", "<cmd>lua require('comment-box').catalog()<CR>", key_opts)
+      vim.keymap.set(
+        { "n", "v" },
+        "<leader>cbb",
+        "<cmd>lua require 'comment-box'.cabox(9)<CR>",
+        key_opts
+      )
+      vim.keymap.set(
+        { "n", "v" },
+        "<leader>cbl",
+        "<cmd>lua require 'comment-box'.lcline(15)<CR>",
+        key_opts
+      )
+      vim.keymap.set(
+        { "n", "v" },
+        "<leader>cbd",
+        "<cmd>lua require('comment-box').dbox()<CR>",
+        key_opts
+      )
+      vim.keymap.set(
+        { "n", "v" },
+        "<leader>cby",
+        "<cmd>lua require('comment-box').yank()<CR>",
+        key_opts
+      )
+      vim.keymap.set(
+        { "n" },
+        "<leader>cba",
+        "<cmd>lua require('comment-box').catalog()<CR>",
+        key_opts
+      )
+    end,
+  },
+
+  {
+    "Phuocminh94/new_ui",
+    enabled = true,
+    branch = "v2.5",
+    init = function ()
+      require("core.utils").load_mappings("mterm")
     end,
   },
 }

@@ -20,9 +20,12 @@ local default_plugins = {
 
   {
     "NvChad/nvterm",
-    enabled = true,
+    enabled = false,
     init = function()
-      -- require("core.utils").load_mappings("nvterm")
+      require("core.utils").load_mappings("nvterm")
+    end,
+    opts = function ()
+      return require "core.utils".load_config().ui.term
     end,
     config = function(_, opts)
       require("base46.term")
