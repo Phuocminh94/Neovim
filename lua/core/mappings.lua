@@ -41,10 +41,9 @@ M.general = {
     -- new buffer
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
-
     ["<leader>fm"] = {
       function()
-        vim.lsp.buf.format { async = true }
+        vim.lsp.buf.format({ async = true })
       end,
       "LSP formatting",
     },
@@ -59,6 +58,12 @@ M.general = {
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
+    ["<leader>fm"] = {
+      function()
+        vim.lsp.buf.format({ async = true })
+      end,
+      "LSP formatting",
+    },
   },
 
   x = {
@@ -100,14 +105,14 @@ M.tabufline = {
     -- close buffers at direction
     ["<leader>br"] = {
       function()
-        require("nvchad.tabufline").closeBufs_at_direction "right"
+        require("nvchad.tabufline").closeBufs_at_direction("right")
       end,
       "Close buffer(s) right",
     },
 
     ["<leader>bl"] = {
       function()
-        require("nvchad.tabufline").closeBufs_at_direction "left"
+        require("nvchad.tabufline").closeBufs_at_direction("left")
       end,
       "Close buffer(s) left",
     },
@@ -238,21 +243,21 @@ M.lspconfig = {
 
     ["gl"] = {
       function()
-        vim.diagnostic.open_float { border = "rounded" }
+        vim.diagnostic.open_float({ border = "rounded" })
       end,
       "Floating diagnostic",
     },
 
     ["[d"] = {
       function()
-        vim.diagnostic.goto_prev { float = { border = "rounded" } }
+        vim.diagnostic.goto_prev({ float = { border = "rounded" } })
       end,
       "Goto prev",
     },
 
     ["]d"] = {
       function()
-        vim.diagnostic.goto_next { float = { border = "rounded" } }
+        vim.diagnostic.goto_next({ float = { border = "rounded" } })
       end,
       "Goto next",
     },
@@ -328,16 +333,16 @@ M.telescope = {
     ["<leader>fE"] = { "<cmd> Telescope file_browser files=false <CR>", "Telescope explorer folders" },
     ["<leader>fn"] = {
       function()
-        require("telescope.builtin").find_files { cwd = vim.fn.stdpath "config" }
+        require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
       end,
       "Find Neovim files",
     },
 
     ["<leader>fN"] = {
       function()
-        require("telescope.builtin").find_files {
+        require("telescope.builtin").find_files({
           cwd = "/mnt/c/Users/PhuocMinh/iCloudDrive/iCloud~md~obsidian/Notes",
-        }
+        })
       end,
       "Find Neovim files",
     },
@@ -399,7 +404,6 @@ M.tterm = {
       "Toggle cwd floating term",
     },
 
-
     ["<A-h>"] = {
       "<cmd> ToggleTerm direction=horizontal<CR>",
       "Toggle horizontal term",
@@ -419,21 +423,21 @@ M.nvterm = {
     -- toggle in terminal mode
     ["<A-\\>"] = {
       function()
-        require("nvterm.terminal").toggle "float"
+        require("nvterm.terminal").toggle("float")
       end,
       "Toggle floating term",
     },
 
     ["<A-h>"] = {
       function()
-        require("nvterm.terminal").toggle "horizontal"
+        require("nvterm.terminal").toggle("horizontal")
       end,
       "Toggle horizontal term",
     },
 
     ["<A-v>"] = {
       function()
-        require("nvterm.terminal").toggle "vertical"
+        require("nvterm.terminal").toggle("vertical")
       end,
       "Toggle vertical term",
     },
@@ -443,21 +447,21 @@ M.nvterm = {
     -- toggle in normal mode
     ["<A-\\>"] = {
       function()
-        require("nvterm.terminal").toggle "float"
+        require("nvterm.terminal").toggle("float")
       end,
       "Toggle floating term",
     },
 
     ["<A-h>"] = {
       function()
-        require("nvterm.terminal").toggle "horizontal"
+        require("nvterm.terminal").toggle("horizontal")
       end,
       "Toggle horizontal term",
     },
 
     ["<A-v>"] = {
       function()
-        require("nvterm.terminal").toggle "vertical"
+        require("nvterm.terminal").toggle("vertical")
       end,
       "Toggle vertical term",
     },
@@ -470,14 +474,14 @@ M.nvterm = {
     -- new
     ["<leader>nht"] = {
       function()
-        require("nvterm.terminal").new "horizontal"
+        require("nvterm.terminal").new("horizontal")
       end,
       "New horizontal term",
     },
 
     ["<leader>nvt"] = {
       function()
-        require("nvterm.terminal").new "vertical"
+        require("nvterm.terminal").new("vertical")
       end,
       "New vertical term",
     },
@@ -490,13 +494,13 @@ M.whichkey = {
   n = {
     ["<leader>wK"] = {
       function()
-        vim.cmd "WhichKey"
+        vim.cmd("WhichKey")
       end,
       "Which-key all keymaps",
     },
     ["<leader>wk"] = {
       function()
-        local input = vim.fn.input "WhichKey: "
+        local input = vim.fn.input("WhichKey: ")
         vim.cmd("WhichKey " .. input)
       end,
       "Which-key query lookup",
@@ -517,7 +521,7 @@ M.blankline = {
 
         if ok then
           vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { start, 0 })
-          vim.cmd [[normal! _]]
+          vim.cmd([[normal! _]])
         end
       end,
 

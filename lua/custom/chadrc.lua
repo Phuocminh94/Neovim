@@ -16,7 +16,7 @@ M.ui = {
   statusline = {
     theme = "vscode",
     overriden_modules = function(modules)
-      local custom = require "custom.configs.statusline"
+      local custom = require("custom.configs.statusline")
       modules[1] = custom.mode()
       modules[2] = custom.fileInfo()
       modules[4] = custom.LSP_Diagnostics()
@@ -45,6 +45,6 @@ M.ui = {
 
 M.plugins = "custom.plugins"
 
-M.mappings = require "custom.mappings"
+M.mappings = require("custom.mappings")
 
 return M

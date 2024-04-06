@@ -1,5 +1,3 @@
--- NOTE: refactoring
-
 return {
   {
     "psliwka/vim-smoothie",
@@ -290,11 +288,11 @@ return {
   {
     "LudoPinelli/comment-box.nvim",
     keys = { "<leader>cbb", "<leader>cbl", "<leader>cby", "<leader>cba", "<leader>cbd" },
-    config = function(_, opts)
+    config = function()
       local key_opts = { noremap = true, silent = true }
       require("comment-box").setup()
       vim.keymap.set({ "n", "v" }, "<leader>cbb", "<cmd>lua require 'comment-box'.cabox(9)<CR>", key_opts)
-      vim.keymap.set({ "n", "v" }, "<leader>cbl", "<cmd>lua require 'comment-box'.lcline(1)<CR>", key_opts)
+      vim.keymap.set({ "n", "v" }, "<leader>cbl", "<cmd>lua require 'comment-box'.lcline(15)<CR>", key_opts)
       vim.keymap.set({ "n", "v" }, "<leader>cbd", "<cmd>lua require('comment-box').dbox()<CR>", key_opts)
       vim.keymap.set({ "n", "v" }, "<leader>cby", "<cmd>lua require('comment-box').yank()<CR>", key_opts)
       vim.keymap.set({ "n" }, "<leader>cba", "<cmd>lua require('comment-box').catalog()<CR>", key_opts)
