@@ -2,17 +2,24 @@
 local M = {}
 
 M.ui = {
+
+  -- =============================== general ===============================
   blankline = { style = "rainbow", blank = true }, -- style: rainbow/nil, blank = true/false
   cmp = { style = "atom" },
   extended_integrations = { "dap", "rainbowdelimiters", "trouble", "todo" },
   hl_override = {
+    CursorLine = { bg = "black2" },
     CursorLineNr = { fg = "yellow" },
     FoldColumn = { bg = "none", fg = "lightbg" },
     LspReferenceRead = { bg = "lightbg", fg = "none" },
     LspReferenceText = { bg = "lightbg", fg = "none" }, -- same Visual highlight but lighter
     LspReferenceWrite = { bg = "lightbg", fg = "none" },
+    NvDashAscii = { bg = "green" },
   },
+  theme_toggle = { "gruvchad", "gruvchad" },
+  theme = "gruvchad",
 
+  -- ============================= statusline ==========================
   statusline = {
     theme = "vscode",
     overriden_modules = function(modules)
@@ -28,8 +35,22 @@ M.ui = {
       table.insert(modules, 6, custom.others())
     end,
   },
-  theme = "gruvchad",
+
+  -- ============================== dashboard ==============================
   nvdash = {
+    header = {
+      [[ ╓─────────────────────────────────────╖ ]],
+      [[ ║           █████████████             ║ ]],
+      [[ ║          █▒  ██   ██                ║ ]],
+      [[ ║              ██   ██                ║ ]],
+      [[ ║              ██   ██                ║ ]],
+      [[ ║             ███   ██                ║ ]],
+      [[ ║            ▓██▒   ██▒  █            ║ ]],
+      [[ ║           ███▓    ▓████             ║ ]],
+      [[ ║                                     ║ ]],
+      [[ ║    𝜋 𝑖𝑠 𝑖𝑟𝑟𝑎𝑡𝑖𝑜𝑛𝑎𝑙 𝑗𝑢𝑠𝑡 𝑙𝑖𝑘𝑒 𝑚𝑒!    ║ ]],
+      [[ ╙─────────────────────────────────────╜ ]],
+    },
     buttons = {
       { "  Find Files", "f", "Telescope find_files" },
       { "󱦺  Recent Files", "o", "Telescope oldfiles" },

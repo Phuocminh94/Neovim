@@ -1,3 +1,5 @@
+local key_opts = { noremap = true, silent = true }
+
 return {
   {
     "psliwka/vim-smoothie",
@@ -68,6 +70,7 @@ return {
 
       -- Installs the debug adapters
       "jay-babu/mason-nvim-dap.nvim",
+      "nvim-neotest/nvim-nio",
     },
     config = function()
       require("custom.configs.dapconfig")
@@ -82,14 +85,6 @@ return {
     end,
     config = function(_, opts)
       require("iron.core").setup(opts)
-    end,
-  },
-
-  {
-    "HiPhish/rainbow-delimiters.nvim",
-    event = "LspAttach",
-    config = function()
-      require("rainbow-delimiters.setup").setup({})
     end,
   },
 
@@ -190,6 +185,7 @@ return {
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
     build = "cd app && yarn install",
     init = function()
       vim.g.mkdp_filetypes = { "markdown" }
@@ -267,8 +263,8 @@ return {
 
   {
     "max397574/better-escape.nvim",
-    event = "InsertEnter",
-    opts = { mapping = { "jk", "jj" } }, -- a table with mappings to use
+    event = "InsertCharPre",
+    opts = { mapping = { "jk", "jj" }, timeout = 300 }, -- a table with mappings to use
   },
 
   {
@@ -316,9 +312,17 @@ return {
   {
     "LudoPinelli/comment-box.nvim",
     keys = { "<leader>cbb", "<leader>cbl", "<leader>cby", "<leader>cba", "<leader>cbd" },
-    config = function()
-      local key_opts = { noremap = true, silent = true }
-      require("comment-box").setup()
+    opts = {
+      lines = { -- symbols used to draw a line
+        line = "=",
+        line_start = "=",
+        line_end = "=",
+        title_left = "=",
+        title_right = "=",
+      },
+    },
+    config = function(_, opts)
+      require("comment-box").setup(opts)
       vim.keymap.set(
         { "n", "v" },
         "<leader>cbb",
@@ -328,7 +332,7 @@ return {
       vim.keymap.set(
         { "n", "v" },
         "<leader>cbl",
-        "<cmd>lua require 'comment-box'.lcline(15)<CR>",
+        "<cmd>lua require 'comment-box'.lcline()<CR>",
         key_opts
       )
       vim.keymap.set(
@@ -353,11 +357,64 @@ return {
   },
 
   {
-    "Phuocminh94/new_ui",
-    enabled = true,
+    "Phuocminh94/new_ui", -- get back when more modules added
+    enabled = false,
     branch = "v2.5",
-    init = function ()
+    init = function()
       require("core.utils").load_mappings("mterm")
+    end,
+  },
+
+  {
+    "voldikss/vim-floaterm",
+    cmd = { "FloatermNew", "FloatermToggle", "FloatermSend" },
+    init = function()
+      require("core.utils").load_mappings("fterm")
+      -- vim.cmd("highlight FloatermBorderCustom" .. " guifg='#ff007c'") -- same Hop color
+      vim.cmd([[let g:floaterm_titleposition = 'right']])
+      vim.cmd([[let g:floaterm_height = 0.7]])
+      vim.cmd([[let g:floaterm_width = 0.65]])
+      vim.cmd([[let g:floaterm_title = " Minh's Terminal ($1/$2) "]])
+      -- vim.cmd([[hi link FloatermBorder NormalFloat]])
+    end,
+  },
+
+  {
+    "Djancyp/better-comments.nvim",
+    event = "LspAttach",
+    config = function()
+      require("better-comment").Setup({
+        tags = {
+          {
+            name = "TODO",
+            fg = "#ff7e13",
+            bg = "none",
+            bold = false,
+            virtual_text = "",
+          },
+          {
+            name = "!!!",
+            fg = "#ff2b0a",
+            bg = "none",
+            bold = false,
+            virtual_text = "",
+          },
+          {
+            name = "*",
+            fg = "#3c7d43",
+            bg = "none",
+            bold = false,
+            virtual_text = "",
+          },
+          {
+            name = "?",
+            fg = "#3498db",
+            bg = "none",
+            bold = false,
+            virtual_text = "",
+          },
+        },
+      })
     end,
   },
 }

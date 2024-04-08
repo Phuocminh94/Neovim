@@ -4,6 +4,9 @@ local style = ibl.style
 
 -- export lightbg to use later
 vim.g.mylightbg = colors.lightbg
+vim.g.myGreen = colors.green
+vim.g.myRed = colors.red
+vim.g.myDarkbg = colors.darker_black
 
 local function addHighlights()
   local common = "IndentBlankline"

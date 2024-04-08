@@ -24,8 +24,8 @@ local default_plugins = {
     init = function()
       require("core.utils").load_mappings("nvterm")
     end,
-    opts = function ()
-      return require "core.utils".load_config().ui.term
+    opts = function()
+      return require("core.utils").load_config().ui.term
     end,
     config = function(_, opts)
       require("base46.term")
@@ -169,6 +169,13 @@ local default_plugins = {
           require("custom.configs.null-ls")
         end,
       },
+      {
+        "HiPhish/rainbow-delimiters.nvim",
+        opts = {},
+        config = function(_, opts)
+          require("rainbow-delimiters.setup").setup(opts)
+        end,
+      },
     },
     -- dependencies = { -- experimented with conform
     --   {
@@ -200,7 +207,11 @@ local default_plugins = {
           "rafamadriz/friendly-snippets",
           { "kawre/neotab.nvim", opts = {} },
         },
-        opts = { history = true, updateevents = "TextChanged,TextChangedI", enable_autosnippets = true },
+        opts = {
+          history = true,
+          updateevents = "TextChanged,TextChangedI",
+          enable_autosnippets = true,
+        },
         config = function(_, opts)
           require("plugins.configs.luasnip")(opts)
         end,

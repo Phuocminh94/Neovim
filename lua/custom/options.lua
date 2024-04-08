@@ -27,7 +27,6 @@ g.lua_snippets_path = "~/.config/nvim/lua/snippets/"
 g.personal_note_path = "/mnt/c/Users/PhuocMinh/iCloudDrive/iCloud~md~obsidian/Notes/Personal/vim-todo.md"
 
 -- ------------------------------- options -------------------------------
--- opt.cmdheight = 0
 opt.foldcolumn = "1"
 opt.foldenable = true
 opt.foldlevel = 99

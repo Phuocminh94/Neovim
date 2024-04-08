@@ -1,6 +1,7 @@
 require "custom.options"
 require "custom.globals"
 require "custom.autocmds"
+require "custom.usercmd"
 
 -- load extended colorshemes
 local extended_base46_files = require("core.utils").load_config().ui.extended_integrations

@@ -1,5 +1,44 @@
 -- n, v, i, t = mode names
 
+-- Move or create
+---@param key 'h'|'j'|'k'|'l'
+local function move_or_create_win(key)
+  local fn = vim.fn
+  local curr_win = fn.winnr()
+  vim.cmd("wincmd " .. key)      --> attempt to move
+
+  if curr_win == fn.winnr() then --> didn't move, so create a split
+    if key == "h" or key == "l" then
+      vim.cmd("wincmd v")
+    else
+      vim.cmd("wincmd s")
+    end
+
+    vim.cmd("wincmd " .. key)
+  end
+end
+
+---@param ft 'filetype'
+local get_ft_cmd = function(ft)
+  local filepath = vim.fn.expand("%:p")   -- full path of the current file (including directory)
+  local dirname = vim.fn.expand("%:p:h")  -- directory of the current file
+  local basename = vim.fn.expand("%:t:r") -- filename without extension of the current file
+  local executable_dir = dirname          -- Use the directory of the current file
+
+  ft_cmds = {
+    cpp = string.format(
+      "g++ %s -o %s/%s && %s/%s",
+      filepath,
+      dirname,
+      basename,
+      dirname,
+      basename
+    ),
+    python = string.format("python3 %s", filepath),
+  }
+  return ft_cmds[ft]
+end
+
 local M = {}
 
 M.general = {
@@ -17,11 +56,32 @@ M.general = {
 
   n = {
     ["<leader><leader>"] = { "<cmd> noh <CR>", "Clear highlights" },
-    -- switch between windows
-    ["<C-h>"] = { "<C-w>h", "Window left" },
-    ["<C-l>"] = { "<C-w>l", "Window right" },
-    ["<C-j>"] = { "<C-w>j", "Window down" },
-    ["<C-k>"] = { "<C-w>k", "Window up" },
+
+    -- smartly switch between windows https://github.com/BrunoKrugel/dotfiles/blob/master/lua/mappings.lua
+    ["<C-h>"] = {
+      function()
+        move_or_create_win("h")
+      end,
+      "Window left",
+    },
+    ["<C-l>"] = {
+      function()
+        move_or_create_win("l")
+      end,
+      "Window right",
+    },
+    ["<C-j>"] = {
+      function()
+        move_or_create_win("j")
+      end,
+      "Window down",
+    },
+    ["<C-k>"] = {
+      function()
+        move_or_create_win("k")
+      end,
+      "Window up",
+    },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -407,7 +467,7 @@ M.telescope = {
     ["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
-    ["<leader>pt"] = { "<cmd> Telescope mterms <CR>", "Pick hidden term" },
+    ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
     -- ["<leader>pt"] = { "<cmd> TermSelect <CR>", "Pick hidden term" },
 
     -- theme switcher
@@ -417,245 +477,242 @@ M.telescope = {
   },
 }
 
-M.tterm = {
+M.fterm = {
   plugin = true,
   n = {
     ["<A-\\>"] = {
-      "<cmd> ToggleTerm direction=float<CR>",
+      "<cmd> FloatermToggle  --wintype=float<CR>",
       "Toggle floating term",
-    },
-
-    ["<C-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    ["<A-h>"] = {
-      "<cmd> ToggleTerm direction=horizontal<CR>",
-      "Toggle horizontal term",
-    },
-
-    ["<A-v>"] = {
-      "<cmd> ToggleTerm direction=vertical<CR>",
-      "Toggle vertical term",
-    },
-  },
-
-  t = {
-    ["<A-\\>"] = {
-      "<cmd> ToggleTerm direction=float<CR>",
-      "Toggle floating term",
-    },
-
-    ["<C-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    ["<A-h>"] = {
-      "<cmd> ToggleTerm direction=horizontal<CR>",
-      "Toggle horizontal term",
-    },
-
-    ["<A-v>"] = {
-      "<cmd> ToggleTerm direction=vertical<CR>",
-      "Toggle vertical term",
-    },
-  },
-}
-
-M.mterm = {
-  plugin = true,
-  t = {
-    -- toggle in terminal mode
-    ["<A-v>"] = {
-      function()
-        require("minh_ui.term").toggle({ pos = "vsp" })
-      end,
-      "Toggle vertical term",
-    },
-
-    ["<A-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | lua require('minh_ui.term').toggle({pos = "float"})<CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    ["\\nht"] = {
-      function()
-        require("minh_ui.term").new({ pos = "sp", size = 0.3 })
-      end,
-      "New horizontal term",
-    },
-
-    ["\\nvt"] = {
-      function()
-        require("minh_ui.term").new({ pos = "vsp", size = 0.3 })
-      end,
-      "New vertical term",
-    },
-
-    ["\\ip"] = {
-      function()
-        require("minh_ui.term").new({ pos = "vsp", size = 0.35, cmd = "ipython" })
-      end,
-      "New ipython term",
     },
 
     ["\\lg"] = {
-      function()
-        require("minh_ui.term").new({
-          pos = "float",
-          cmd = "lazygit",
-          float_opts = {
-            col = 0,
-            row = 0,
-            height = 0.9,
-            width = 1,
-            border = "single",
-          },
-        })
-      end,
+      [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
       "Lazygit",
-    },
-  },
-  n = {
-    -- toggle in terminal mode
-    ["<A-h>"] = {
-      function()
-        require("minh_ui.term").toggle({ pos = "sp" })
-      end,
-      "Toggle horizontal term",
-    },
-
-    ["<A-v>"] = {
-      function()
-        require("minh_ui.term").toggle({ pos = "vsp" })
-      end,
-      "Toggle vertical term",
-    },
-
-    ["<A-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | lua require('minh_ui.term').toggle {pos = "float"} <CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    ["\\nht"] = {
-      function()
-        require("minh_ui.term").new({ pos = "sp", size = 0.3 })
-      end,
-      "New horizontal term",
     },
 
     ["\\ip"] = {
-      function()
-        require("minh_ui.term").new({ pos = "vsp", size = 0.35, cmd = "ipython" })
-      end,
-      "New ipython term",
+      [[<cmd>FloatermNew  --wintype=vsplit --width=0.3 ipython<CR>]],
+      "Ipython terminal",
     },
 
-    ["\\nvt"] = {
+    ["\\rn"] = {
       function()
-        require("minh_ui.term").new({ pos = "vsp", size = 0.3 })
+        local cmd =
+            string.format("FloatermNew --autoclose=0 %s", get_ft_cmd(vim.bo.filetype))
+        vim.cmd(cmd)
       end,
-      "New vertical term",
+      "Code runner",
     },
 
+    ["<C-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
+    },
+
+    ["\\kt"] = {
+      [[<cmd>FloatermKill<CR>]],
+      "Kill term",
+    },
+  },
+  t = {
+    ["<A-\\>"] = {
+      "<cmd>FloatermToggle  --wintype=float<CR>",
+      "Toggle floating term",
+    },
     ["\\lg"] = {
-      function()
-        require("minh_ui.term").new({
-          pos = "float",
-          cmd = "lazygit",
-          float_opts = {
-            col = 0,
-            row = 0,
-            height = 0.9,
-            width = 1,
-            border = "single",
-          },
-        })
-      end,
+      [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
       "Lazygit",
     },
-  },
-}
-
-M.nvterm = {
-  plugin = true,
-
-  t = {
-    -- toggle in terminal mode
-    ["<A-\\>"] = {
-      function()
-        require("nvterm.terminal").toggle("float")
-      end,
-      "Toggle floating term",
-    },
-
-    ["<A-h>"] = {
-      function()
-        require("nvterm.terminal").toggle("horizontal")
-      end,
-      "Toggle horizontal term",
-    },
-
-    ["<A-v>"] = {
-      function()
-        require("nvterm.terminal").toggle("vertical")
-      end,
-      "Toggle vertical term",
-    },
 
     ["<C-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+      [[<cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR>]],
       "Toggle cwd floating term",
-    },
-  },
-
-  n = {
-    -- toggle in normal mode
-    ["<A-\\>"] = {
-      function()
-        require("nvterm.terminal").toggle("float")
-      end,
-      "Toggle floating term",
-    },
-
-    ["<A-h>"] = {
-      function()
-        require("nvterm.terminal").toggle("horizontal")
-      end,
-      "Toggle horizontal term",
-    },
-
-    ["<A-v>"] = {
-      function()
-        require("nvterm.terminal").toggle("vertical")
-      end,
-      "Toggle vertical term",
-    },
-
-    ["<C-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    -- new
-    ["<leader>nht"] = {
-      function()
-        require("nvterm.terminal").new("horizontal")
-      end,
-      "New horizontal term",
-    },
-
-    ["<leader>nvt"] = {
-      function()
-        require("nvterm.terminal").new("vertical")
-      end,
-      "New vertical term",
     },
   },
 }
 
+-- M.tterm = {
+--   plugin = true,
+--   n = {
+--     ["<A-\\>"] = {
+--       "<cmd> ToggleTerm direction=float<CR>",
+--       "Toggle floating term",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
+--       "Toggle cwd floating term",
+--     },
+--
+--     ["<A-h>"] = {
+--       "<cmd> ToggleTerm direction=horizontal<CR>",
+--       "Toggle horizontal term",
+--     },
+--
+--     ["<A-v>"] = {
+--       "<cmd> ToggleTerm direction=vertical<CR>",
+--       "Toggle vertical term",
+--     },
+--   },
+--
+--   t = {
+--     ["<A-\\>"] = {
+--       "<cmd> ToggleTerm direction=float<CR>",
+--       "Toggle floating term",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
+--       "Toggle cwd floating term",
+--     },
+--
+--     ["<A-h>"] = {
+--       "<cmd> ToggleTerm direction=horizontal<CR>",
+--       "Toggle horizontal term",
+--     },
+--
+--     ["<A-v>"] = {
+--       "<cmd> ToggleTerm direction=vertical<CR>",
+--       "Toggle vertical term",
+--     },
+--   },
+-- }
+
+
+-- M.nvterm = {
+--   plugin = true,
+--
+--   t = {
+--     -- toggle in terminal mode
+--     ["<A-\\>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("float")
+--       end,
+--       "Toggle floating term",
+--     },
+--
+--     ["<A-h>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("horizontal")
+--       end,
+--       "Toggle horizontal term",
+--     },
+--
+--     ["\\ip"] = {
+--       function()
+--         require("nvterm.terminal").new("vertical")
+--       end,
+--       "New ipython term",
+--     },
+--
+--     ["\\rn"] = {
+--       function()
+--         require("nvterm.terminal").send(execute_ft_command(), "float")
+--       end,
+--       "Run code on filetype",
+--     },
+--
+--     -- new
+--     ["\\nht"] = {
+--       function()
+--         require("nvterm.terminal").new("horizontal")
+--       end,
+--       "New horizontal term",
+--     },
+--
+--     ["\\nvt"] = {
+--       function()
+--         require("nvterm.terminal").new("vertical")
+--       end,
+--       "New vertical term",
+--     },
+--
+--     ["\\lg"] = {
+--       function()
+--         require("nvterm.terminal").send("lazygit", "float")
+--       end,
+--       "Lazygit",
+--     },
+--
+--     ["<A-v>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("vertical")
+--       end,
+--       "Toggle vertical term",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+--       "Toggle cwd floating term",
+--     },
+--   },
+--
+--   n = {
+--     -- toggle in normal mode
+--     ["<A-\\>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("float")
+--       end,
+--       "Toggle floating term",
+--     },
+--
+--     ["<A-h>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("horizontal")
+--       end,
+--       "Toggle horizontal term",
+--     },
+--
+--     ["\\rn"] = {
+--       function()
+--         require("nvterm.terminal").send(execute_ft_command(), "float")
+--       end,
+--       "Run code on filetype",
+--     },
+--
+--     ["\\ip"] = {
+--       function()
+--         require("nvterm.terminal").new("vertical")
+--       end,
+--       "New ipython term",
+--     },
+--
+--     ["\\lg"] = {
+--       function()
+--         require("nvterm.terminal").send("lazygit", "float")
+--       end,
+--       "Lazygit",
+--     },
+--
+--     ["<A-v>"] = {
+--       function()
+--         require("nvterm.terminal").toggle("vertical")
+--       end,
+--       "Toggle vertical term",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+--       "Toggle cwd floating term",
+--     },
+--
+--     -- new
+--     ["\\nht"] = {
+--       function()
+--         require("nvterm.terminal").new("horizontal")
+--       end,
+--       "New horizontal term",
+--     },
+--
+--     ["\\nvt"] = {
+--       function()
+--         require("nvterm.terminal").new("vertical")
+--       end,
+--       "New vertical term",
+--     },
+--   },
+-- }
+--
 M.whichkey = {
   plugin = true,
 
