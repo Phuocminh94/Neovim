@@ -17,3 +17,4 @@ for _, server in ipairs(vim.g.mason_binaries_list) do
   lspconfig[server].setup(opts)
 end
 
+-- NOTE: update node/npm to use typescript-language-server 

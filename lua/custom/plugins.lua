@@ -1,22 +1,11 @@
 local key_opts = { noremap = true, silent = true }
 
 return {
+
+  --[[ Navigation ]]
   {
     "psliwka/vim-smoothie",
     keys = { "<C-d>", "<C-u>" },
-  },
-
-  {
-    "kylechui/nvim-surround",
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
-    keys = {
-      "ys",
-      "cs",
-      "ds",
-      "v",
-      "V",
-    },
-    opts = {},
   },
 
   {
@@ -47,6 +36,42 @@ return {
   },
 
   {
+    "max397574/better-escape.nvim",
+    event = "InsertCharPre",
+    opts = { mapping = { "jk", "jj" }, timeout = 300 }, -- a table with mappings to use
+  },
+
+  {
+    "chentoast/marks.nvim",
+    keys = { "'", "`", "m", "<leader>bm" },
+    init = function()
+      vim.cmd("highlight MarkSignNumHL" .. " guifg='#ff007c'")
+    end,
+    config = true,
+  },
+
+  {
+    "rmagatti/goto-preview",
+    event = "LspAttach",
+    opts = { default_mappings = true },
+  },
+
+
+--[[ Text-editing ]]
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    keys = {
+      "ys",
+      "cs",
+      "ds",
+      "v",
+      "V",
+    },
+    opts = {},
+  },
+
+  {
     "mg979/vim-visual-multi",
     event = "BufRead",
     init = function()
@@ -61,6 +86,70 @@ return {
     end,
   },
 
+  {
+    "Wansmer/treesj",
+    config = true,
+  },
+
+  {
+    "junegunn/vim-easy-align",
+    keys = { "ga" },
+  },
+
+
+--[[ Terminal ]]
+  {
+    "voldikss/vim-floaterm",
+    enabled = false,
+    cmd = { "FloatermNew", "FloatermToggle", "FloatermSend" },
+    init = function()
+      require("core.utils").load_mappings("fterm")
+      -- vim.cmd("highlight FloatermBorderCustom" .. " guifg='#ff007c'") -- same Hop color
+      vim.cmd([[let g:floaterm_titleposition = 'right']])
+      vim.cmd([[let g:floaterm_height = 0.7]])
+      vim.cmd([[let g:floaterm_width = 0.65]])
+      vim.cmd([[let g:floaterm_title = " Minh's Terminal ($1/$2) "]])
+      -- vim.cmd([[hi link FloatermBorder NormalFloat]])
+    end,
+  },
+
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    enabled = false,
+    keys = { "<A-\\>", "<C-\\>", "<A-v>", "<A-h>", "<leader>lg" },
+    opts = function()
+      return require("custom.configs.tterm")
+    end,
+    config = function(_, opts)
+      require("toggleterm").setup(opts)
+      require("core.utils").load_mappings("tterm")
+    end,
+  },
+
+
+--[[ Git ]]
+  {
+    "tpope/vim-fugitive",
+    cmd = { "Git" },
+  },
+
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
+  },
+
+
+--[[ DAP ]]
   {
     "mfussenegger/nvim-dap",
     cmd = { "DapToggleBreakpoint", "DapContinue" },
@@ -77,36 +166,8 @@ return {
     end,
   },
 
-  {
-    "hkupty/iron.nvim",
-    cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
-    opts = function()
-      return require("custom.configs.iron")
-    end,
-    config = function(_, opts)
-      require("iron.core").setup(opts)
-    end,
-  },
 
-  {
-    "mbbill/undotree",
-    cmd = { "UndotreeToggle" },
-    keys = { "<leader>ut" },
-    config = function()
-      vim.keymap.set(
-        { "i", "n", "v" },
-        "<leader>ut",
-        ":UndotreeToggle<CR>",
-        { desc = "Toggle undotree" }
-      )
-    end,
-  },
-
-  {
-    "tpope/vim-fugitive",
-    cmd = { "Git" },
-  },
-
+--[[ Folding ]]
   {
     "kevinhwang91/nvim-ufo",
     keys = { "zr", "zm", "za", "zo", "[z", "]z" },
@@ -167,28 +228,53 @@ return {
     end,
   },
 
+
+--[[ REPL ]]
   {
-    "hedyhli/outline.nvim",
-    keys = { "<leader>o" },
+    "hkupty/iron.nvim",
+    cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
     opts = function()
-      return require("custom.configs.outline")
+      return require("custom.configs.iron")
     end,
     config = function(_, opts)
-      -- Example mapping to toggle outline
-      vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
-      vim.api.nvim_set_hl(0, "OutlineCurrent", { link = "Visual" })
-
-      require("outline").setup(opts)
+      require("iron.core").setup(opts)
     end,
   },
 
+
+--[[ UI ]]
   {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = "cd app && yarn install",
-    init = function()
-      vim.g.mkdp_filetypes = { "markdown" }
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>ft", "<cmd>TodoTelescope<CR>", desc = "Find TODO" },
+    },
+    opts = {
+      signs = false,
+      highlight = {
+        before = "fg",  -- "fg" or "bg" or empty
+        keyword = "fg", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
+        after = "fg",   -- "fg" or "bg" or empty
+      },
+      colors = {
+        info = {"#ff8c00"}, -- TODO
+        hint = {"#8fa025"}, -- NOTE
+        warning = {"#f02d0f"}, -- WARNING
+        error = {"#2f74b4"} -- FIX
+      },
+    },
+  },
+
+  {
+    -- having some problems with hop; try gs + char
+    "folke/noice.nvim",    -- used this help fix the problem with searching display in statusline.
+    -- keys = { ":", "/", "?" },
+    event = { "BufRead" }, -- fixed the above problem with hop
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require("noice").setup(require("custom.configs.noice"))
     end,
   },
 
@@ -209,31 +295,31 @@ return {
   },
 
   {
-    "Wansmer/treesj",
-    config = true,
+    "mbbill/undotree",
+    cmd = { "UndotreeToggle" },
+    keys = { "<leader>ut" },
+    config = function()
+      vim.keymap.set(
+        { "i", "n", "v" },
+        "<leader>ut",
+        ":UndotreeToggle<CR>",
+        { desc = "Toggle undotree" }
+      )
+    end,
   },
 
   {
-    "olimorris/persisted.nvim",
-    cmd = {
-      "SessionToggle",
-      "SessionStart",
-      "SessionStop",
-      "SessionSave",
-      "SessionLoad",
-      "SessionLoadLast",
-      "SessionDelete",
-    },
-    config = function()
-      require("persisted").setup({
-        should_autosave = function()
-          -- do not autosave if the alpha dashboard is the current filetype
-          if vim.bo.filetype == "nvdash" then
-            return false
-          end
-          return true
-        end,
-      })
+    "hedyhli/outline.nvim",
+    keys = { "<leader>o" },
+    opts = function()
+      return require("custom.configs.outline")
+    end,
+    config = function(_, opts)
+      -- Example mapping to toggle outline
+      vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
+      vim.api.nvim_set_hl(0, "OutlineCurrent", { link = "Visual" })
+
+      require("outline").setup(opts)
     end,
   },
 
@@ -245,68 +331,6 @@ return {
       require("true-zen").setup({})
       vim.keymap.set("n", "<leader>z", "<cmd>TZMinimalist<CR>", { desc = "Zen mode" })
     end,
-  },
-
-  {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    enabled = false,
-    keys = { "<A-\\>", "<C-\\>", "<A-v>", "<A-h>", "<leader>lg" },
-    opts = function()
-      return require("custom.configs.tterm")
-    end,
-    config = function(_, opts)
-      require("toggleterm").setup(opts)
-      require("core.utils").load_mappings("tterm")
-    end,
-  },
-
-  {
-    "max397574/better-escape.nvim",
-    event = "InsertCharPre",
-    opts = { mapping = { "jk", "jj" }, timeout = 300 }, -- a table with mappings to use
-  },
-
-  {
-    "chentoast/marks.nvim",
-    keys = { "'", "`", "m", "<leader>bm" },
-    init = function()
-      vim.cmd("highlight MarkSignNumHL" .. " guifg='#ff007c'")
-    end,
-    config = true,
-  },
-
-  {
-    "rmagatti/goto-preview",
-    event = "LspAttach",
-    opts = { default_mappings = true },
-  },
-
-  {
-    -- having some problems with hop; try gs + char
-    "folke/noice.nvim",    -- used this help fix the problem with searching display in statusline.
-    -- keys = { ":", "/", "?" },
-    event = { "BufRead" }, -- fixed the above problem with hop
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require("noice").setup(require("custom.configs.noice"))
-    end,
-  },
-
-  {
-    "siawkz/nvim-cheatsh",
-    cmd = { "Cheat" },
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-    },
-    config = true,
-  },
-
-  {
-    "junegunn/vim-easy-align",
-    keys = { "ga" },
   },
 
   {
@@ -365,56 +389,53 @@ return {
     end,
   },
 
+
+--[[ Filetype ]]
   {
-    "voldikss/vim-floaterm",
-    cmd = { "FloatermNew", "FloatermToggle", "FloatermSend" },
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = "cd app && yarn install",
     init = function()
-      require("core.utils").load_mappings("fterm")
-      -- vim.cmd("highlight FloatermBorderCustom" .. " guifg='#ff007c'") -- same Hop color
-      vim.cmd([[let g:floaterm_titleposition = 'right']])
-      vim.cmd([[let g:floaterm_height = 0.7]])
-      vim.cmd([[let g:floaterm_width = 0.65]])
-      vim.cmd([[let g:floaterm_title = " Minh's Terminal ($1/$2) "]])
-      -- vim.cmd([[hi link FloatermBorder NormalFloat]])
+      vim.g.mkdp_filetypes = { "markdown" }
     end,
   },
 
+
+--[[ Session ]]
   {
-    "Djancyp/better-comments.nvim",
-    event = "LspAttach",
+    "olimorris/persisted.nvim",
+    cmd = {
+      "SessionToggle",
+      "SessionStart",
+      "SessionStop",
+      "SessionSave",
+      "SessionLoad",
+      "SessionLoadLast",
+      "SessionDelete",
+    },
     config = function()
-      require("better-comment").Setup({
-        tags = {
-          {
-            name = "TODO",
-            fg = "#ff7e13",
-            bg = "none",
-            bold = false,
-            virtual_text = "",
-          },
-          {
-            name = "!!!",
-            fg = "#ff2b0a",
-            bg = "none",
-            bold = false,
-            virtual_text = "",
-          },
-          {
-            name = "*",
-            fg = "#3c7d43",
-            bg = "none",
-            bold = false,
-            virtual_text = "",
-          },
-          {
-            name = "?",
-            fg = "#3498db",
-            bg = "none",
-            bold = false,
-            virtual_text = "",
-          },
-        },
+      require("persisted").setup({
+        should_autosave = function()
+          -- do not autosave if the alpha dashboard is the current filetype
+          if vim.bo.filetype == "nvdash" then
+            return false
+          end
+          return true
+        end,
       })
     end,
   },
+
+
+--[[ Code assistant ]]
+  {
+    "siawkz/nvim-cheatsh",
+    cmd = { "Cheat" },
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    config = true,
+  },
+
 }

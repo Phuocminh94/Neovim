@@ -39,6 +39,20 @@ local get_ft_cmd = function(ft)
   return ft_cmds[ft]
 end
 
+---@param t 'TODO'|'WARN'|'NOTE'|'FIX'
+local todo_comment = function(t)
+  local isLoaded = package.loaded["todo-comments"] ~= nil
+
+  if not isLoaded then
+    vim.cmd([[lua require "todo-comments"]])
+  end
+
+  vim.api.nvim_put({ t .. ": " }, "", false, true)
+  vim.cmd([[lua require("Comment.api").toggle.linewise()]])
+  vim.cmd([[normal! A ]])
+  vim.cmd([[startinsert]])
+end
+
 local M = {}
 
 M.general = {
@@ -261,6 +275,35 @@ M.comment = {
       end,
       "Toggle comment",
     },
+
+    ["gctd"] = {
+      -- NOTE: Don't call the todo_comment function directly
+      function()
+        todo_comment("TODO")
+      end,
+      "TODO comment",
+    },
+
+    ["gcn"] = {
+      function()
+        todo_comment("NOTE")
+      end,
+      "NOTE comment",
+    },
+
+    ["gcw"] = {
+      function()
+        todo_comment("WARN")
+      end,
+      "WARNING comment",
+    },
+
+    ["gcf"] = {
+      function()
+        todo_comment("FIX")
+      end,
+      "FIX comment",
+    },
   },
 
   v = {
@@ -477,59 +520,59 @@ M.telescope = {
   },
 }
 
-M.fterm = {
-  plugin = true,
-  n = {
-    ["<A-\\>"] = {
-      "<cmd> FloatermToggle  --wintype=float<CR>",
-      "Toggle floating term",
-    },
-
-    ["\\lg"] = {
-      [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
-      "Lazygit",
-    },
-
-    ["\\ip"] = {
-      [[<cmd>FloatermNew  --wintype=vsplit --width=0.3 ipython<CR>]],
-      "Ipython terminal",
-    },
-
-    ["\\rn"] = {
-      function()
-        local cmd =
-            string.format("FloatermNew --autoclose=0 %s", get_ft_cmd(vim.bo.filetype))
-        vim.cmd(cmd)
-      end,
-      "Code runner",
-    },
-
-    ["<C-\\>"] = {
-      [[ <cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR> ]],
-      "Toggle cwd floating term",
-    },
-
-    ["\\kt"] = {
-      [[<cmd>FloatermKill<CR>]],
-      "Kill term",
-    },
-  },
-  t = {
-    ["<A-\\>"] = {
-      "<cmd>FloatermToggle  --wintype=float<CR>",
-      "Toggle floating term",
-    },
-    ["\\lg"] = {
-      [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
-      "Lazygit",
-    },
-
-    ["<C-\\>"] = {
-      [[<cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR>]],
-      "Toggle cwd floating term",
-    },
-  },
-}
+-- M.fterm = {
+--   plugin = true,
+--   n = {
+--     ["<A-\\>"] = {
+--       "<cmd> FloatermToggle  --wintype=float<CR>",
+--       "Toggle floating term",
+--     },
+--
+--     ["\\lg"] = {
+--       [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
+--       "Lazygit",
+--     },
+--
+--     ["\\ip"] = {
+--       [[<cmd>FloatermNew  --wintype=vsplit --width=0.3 ipython<CR>]],
+--       "Ipython terminal",
+--     },
+--
+--     ["\\rn"] = {
+--       function()
+--         local cmd =
+--             string.format("FloatermSend --autoclose=0 %s", get_ft_cmd(vim.bo.filetype))
+--         vim.cmd(cmd)
+--       end,
+--       "Code runner",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[ <cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR> ]],
+--       "Toggle cwd floating term",
+--     },
+--
+--     ["\\kt"] = {
+--       [[<cmd>FloatermKill<CR>]],
+--       "Kill term",
+--     },
+--   },
+--   t = {
+--     ["<A-\\>"] = {
+--       "<cmd>FloatermToggle  --wintype=float<CR>",
+--       "Toggle floating term",
+--     },
+--     ["\\lg"] = {
+--       [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
+--       "Lazygit",
+--     },
+--
+--     ["<C-\\>"] = {
+--       [[<cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR>]],
+--       "Toggle cwd floating term",
+--     },
+--   },
+-- }
 
 -- M.tterm = {
 --   plugin = true,
@@ -578,141 +621,130 @@ M.fterm = {
 --   },
 -- }
 
+M.nvterm = {
+  plugin = true,
 
--- M.nvterm = {
---   plugin = true,
---
---   t = {
---     -- toggle in terminal mode
---     ["<A-\\>"] = {
---       function()
---         require("nvterm.terminal").toggle("float")
---       end,
---       "Toggle floating term",
---     },
---
---     ["<A-h>"] = {
---       function()
---         require("nvterm.terminal").toggle("horizontal")
---       end,
---       "Toggle horizontal term",
---     },
---
---     ["\\ip"] = {
---       function()
---         require("nvterm.terminal").new("vertical")
---       end,
---       "New ipython term",
---     },
---
---     ["\\rn"] = {
---       function()
---         require("nvterm.terminal").send(execute_ft_command(), "float")
---       end,
---       "Run code on filetype",
---     },
---
---     -- new
---     ["\\nht"] = {
---       function()
---         require("nvterm.terminal").new("horizontal")
---       end,
---       "New horizontal term",
---     },
---
---     ["\\nvt"] = {
---       function()
---         require("nvterm.terminal").new("vertical")
---       end,
---       "New vertical term",
---     },
---
---     ["\\lg"] = {
---       function()
---         require("nvterm.terminal").send("lazygit", "float")
---       end,
---       "Lazygit",
---     },
---
---     ["<A-v>"] = {
---       function()
---         require("nvterm.terminal").toggle("vertical")
---       end,
---       "Toggle vertical term",
---     },
---
---     ["<C-\\>"] = {
---       [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
---       "Toggle cwd floating term",
---     },
---   },
---
---   n = {
---     -- toggle in normal mode
---     ["<A-\\>"] = {
---       function()
---         require("nvterm.terminal").toggle("float")
---       end,
---       "Toggle floating term",
---     },
---
---     ["<A-h>"] = {
---       function()
---         require("nvterm.terminal").toggle("horizontal")
---       end,
---       "Toggle horizontal term",
---     },
---
---     ["\\rn"] = {
---       function()
---         require("nvterm.terminal").send(execute_ft_command(), "float")
---       end,
---       "Run code on filetype",
---     },
---
---     ["\\ip"] = {
---       function()
---         require("nvterm.terminal").new("vertical")
---       end,
---       "New ipython term",
---     },
---
---     ["\\lg"] = {
---       function()
---         require("nvterm.terminal").send("lazygit", "float")
---       end,
---       "Lazygit",
---     },
---
---     ["<A-v>"] = {
---       function()
---         require("nvterm.terminal").toggle("vertical")
---       end,
---       "Toggle vertical term",
---     },
---
---     ["<C-\\>"] = {
---       [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
---       "Toggle cwd floating term",
---     },
---
---     -- new
---     ["\\nht"] = {
---       function()
---         require("nvterm.terminal").new("horizontal")
---       end,
---       "New horizontal term",
---     },
---
---     ["\\nvt"] = {
---       function()
---         require("nvterm.terminal").new("vertical")
---       end,
---       "New vertical term",
---     },
---   },
--- }
---
+  t = {
+    -- toggle in terminal mode
+    ["<A-\\>"] = {
+      function()
+        require("nvterm.terminal").toggle("float")
+      end,
+      "Toggle floating term",
+    },
+
+    ["<A-h>"] = {
+      function()
+        require("nvterm.terminal").toggle("horizontal")
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["\\ip"] = {
+      function()
+        vim.cmd([[lua require("nvterm.terminal").new("vertical")]])
+        vim.cmd([[lua require("nvterm.terminal").send("ipython")]])
+        vim.cmd([[startinsert]])
+      end,
+      "New ipython term",
+    },
+
+    ["\\rn"] = {
+      function()
+        require("nvterm.terminal").send(get_ft_cmd(vim.bo.ft), "float")
+      end,
+      "Run code on filetype",
+    },
+
+    -- new
+    ["\\nht"] = {
+      function()
+        require("nvterm.terminal").new("horizontal")
+      end,
+      "New horizontal term",
+    },
+
+    ["\\nvt"] = {
+      function()
+        require("nvterm.terminal").new("vertical")
+      end,
+      "New vertical term",
+    },
+
+    ["<A-v>"] = {
+      function()
+        require("nvterm.terminal").toggle("vertical")
+      end,
+      "Toggle vertical term",
+    },
+
+    ["<C-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
+    },
+  },
+
+  n = {
+    -- toggle in normal mode
+    ["<A-\\>"] = {
+      function()
+        require("nvterm.terminal").toggle("float")
+      end,
+      "Toggle floating term",
+    },
+
+    ["<A-h>"] = {
+      function()
+        require("nvterm.terminal").toggle("horizontal")
+      end,
+      "Toggle horizontal term",
+    },
+
+    ["\\rn"] = {
+      function()
+        require("nvterm.terminal").send(get_ft_cmd(vim.bo.filetype), "float")
+      end,
+      "Run code on filetype",
+    },
+
+    ["\\ip"] = {
+      function()
+        vim.cmd([[lua require("nvterm.terminal").new("vertical")]])
+        vim.cmd([[lua require("nvterm.terminal").send("ipython")]])
+        vim.cmd([[startinsert]])
+      end,
+      "New ipython term",
+    },
+
+    ["<A-v>"] = {
+      function()
+        require("nvterm.terminal").toggle("vertical")
+      end,
+      "Toggle vertical term",
+    },
+
+    ["<C-\\>"] = {
+      [[ <cmd> let $DIR=expand('%:p:h') | lua require('nvterm.terminal').toggle 'float' <CR> cd $DIR && clear <CR> ]],
+      "Toggle cwd floating term",
+    },
+
+    -- new
+    ["\\nht"] = {
+      function()
+        require("nvterm.terminal").new("horizontal")
+      end,
+      "New horizontal term",
+    },
+
+    ["\\nvt"] = {
+      function()
+        require("nvterm.terminal").new("vertical")
+      end,
+      "New vertical term",
+    },
+  },
+}
+
 M.whichkey = {
   plugin = true,
 
