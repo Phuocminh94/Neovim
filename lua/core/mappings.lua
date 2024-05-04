@@ -26,14 +26,7 @@ local get_ft_cmd = function(ft)
   local executable_dir = dirname          -- Use the directory of the current file
 
   ft_cmds = {
-    cpp = string.format(
-      "g++ %s -o %s/%s && %s/%s",
-      filepath,
-      dirname,
-      basename,
-      dirname,
-      basename
-    ),
+    cpp = string.format("g++ %s -o %s/%s && %s/%s", filepath, dirname, basename, dirname, basename),
     python = string.format("python3 %s", filepath),
   }
   return ft_cmds[ft]
@@ -216,14 +209,14 @@ M.tabufline = {
     },
 
     -- close buffers at direction
-    ["<leader>br"] = {
+    ["<leader>cr"] = {
       function()
         require("nvchad.tabufline").closeBufs_at_direction("right")
       end,
       "Close buffer(s) right",
     },
 
-    ["<leader>bl"] = {
+    ["<leader>cl"] = {
       function()
         require("nvchad.tabufline").closeBufs_at_direction("left")
       end,
@@ -237,7 +230,7 @@ M.tabufline = {
       "Close buffer(s) all",
     },
 
-    ["<leader>bc"] = {
+    ["<leader>bo"] = {
       function()
         require("nvchad.tabufline").closeOtherBufs()
       end,
@@ -466,7 +459,7 @@ M.telescope = {
       "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>",
       "Find all",
     },
-    ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
+    -- ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
     ["<leader>fH"] = { "<cmd> Telescope highlights <CR>", "Find highlights" },
@@ -482,20 +475,20 @@ M.telescope = {
       "<cmd> Telescope file_browser files=false <CR>",
       "Telescope explorer folders",
     },
-    ["<leader>fn"] = {
+    ["<leader>fN"] = {
       function()
         require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
       end,
       "Find Neovim files",
     },
 
-    ["<leader>fN"] = {
+    ["<leader>fn"] = {
       function()
         require("telescope.builtin").find_files({
           cwd = "/mnt/c/Users/PhuocMinh/iCloudDrive/iCloud~md~obsidian/Notes",
         })
       end,
-      "Find Neovim files",
+      "Find personal notes",
     },
 
     ["<leader>f<CR>"] = {
@@ -516,110 +509,26 @@ M.telescope = {
     -- theme switcher
     ["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
 
-    ["<leader>bm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+    ["<leader>bm"] = { "<cmd> Telescope marks <CR>", "Telescope bookmarks" },
+
+    -- find word under cursor
+    ["<leader>fw"] = {
+      function()
+        local word = vim.fn.expand("<cword>")
+        require("telescope.builtin").grep_string({ search = word })
+      end,
+      "Find word under cursor",
+    },
+
+    ["<leader>fW"] = {
+      function()
+        local word = vim.fn.expand("<cWORD>")
+        require("telescope.builtin").grep_string({ search = word })
+      end,
+      "Find WORD under cursor",
+    },
   },
 }
-
--- M.fterm = {
---   plugin = true,
---   n = {
---     ["<A-\\>"] = {
---       "<cmd> FloatermToggle  --wintype=float<CR>",
---       "Toggle floating term",
---     },
---
---     ["\\lg"] = {
---       [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
---       "Lazygit",
---     },
---
---     ["\\ip"] = {
---       [[<cmd>FloatermNew  --wintype=vsplit --width=0.3 ipython<CR>]],
---       "Ipython terminal",
---     },
---
---     ["\\rn"] = {
---       function()
---         local cmd =
---             string.format("FloatermSend --autoclose=0 %s", get_ft_cmd(vim.bo.filetype))
---         vim.cmd(cmd)
---       end,
---       "Code runner",
---     },
---
---     ["<C-\\>"] = {
---       [[ <cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR> ]],
---       "Toggle cwd floating term",
---     },
---
---     ["\\kt"] = {
---       [[<cmd>FloatermKill<CR>]],
---       "Kill term",
---     },
---   },
---   t = {
---     ["<A-\\>"] = {
---       "<cmd>FloatermToggle  --wintype=float<CR>",
---       "Toggle floating term",
---     },
---     ["\\lg"] = {
---       [[<cmd>FloatermNew  --wintype=float --width=0.99 --height=0.99 lazygit<CR>]],
---       "Lazygit",
---     },
---
---     ["<C-\\>"] = {
---       [[<cmd> let $DIR=expand('%:p:h') | FloatermToggle --wintype=float <CR> cd $DIR && clear <CR>]],
---       "Toggle cwd floating term",
---     },
---   },
--- }
-
--- M.tterm = {
---   plugin = true,
---   n = {
---     ["<A-\\>"] = {
---       "<cmd> ToggleTerm direction=float<CR>",
---       "Toggle floating term",
---     },
---
---     ["<C-\\>"] = {
---       [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
---       "Toggle cwd floating term",
---     },
---
---     ["<A-h>"] = {
---       "<cmd> ToggleTerm direction=horizontal<CR>",
---       "Toggle horizontal term",
---     },
---
---     ["<A-v>"] = {
---       "<cmd> ToggleTerm direction=vertical<CR>",
---       "Toggle vertical term",
---     },
---   },
---
---   t = {
---     ["<A-\\>"] = {
---       "<cmd> ToggleTerm direction=float<CR>",
---       "Toggle floating term",
---     },
---
---     ["<C-\\>"] = {
---       [[ <cmd> let $DIR=expand('%:p:h') | ToggleTerm direction=float <CR> cd $DIR && clear <CR> ]],
---       "Toggle cwd floating term",
---     },
---
---     ["<A-h>"] = {
---       "<cmd> ToggleTerm direction=horizontal<CR>",
---       "Toggle horizontal term",
---     },
---
---     ["<A-v>"] = {
---       "<cmd> ToggleTerm direction=vertical<CR>",
---       "Toggle vertical term",
---     },
---   },
--- }
 
 M.nvterm = {
   plugin = true,
@@ -874,6 +783,14 @@ M.gitsigns = {
     ["<leader>hs"] = {
       function()
         require("gitsigns").stage_hunk()
+      end,
+
+      "Stage hunk",
+    },
+
+    ["<leader>hS"] = {
+      function()
+        require("gitsigns").stage_buffer()
       end,
 
       "Stage hunk",

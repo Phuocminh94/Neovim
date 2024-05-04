@@ -48,7 +48,7 @@ function next_closed_fold(direction)
     vim.cmd(cmd)
 
     -- Update line numbers and check the fold state
-    l0, l = l, vim.fn.line "."
+    l0, l = l, vim.fn.line(".")
     open = vim.fn.foldclosed(l) < 0
   end
 
@@ -62,7 +62,7 @@ end
 ---@param length (number) The desired length of the comment line. Defaults to 90.
 function _G.comment(length)
   local length = length or 90
-  local message = vim.fn.input "Enter the custom message: "
+  local message = vim.fn.input("Enter the custom message: ")
   local padding = length - #message
 
   local result = nil
@@ -75,24 +75,24 @@ function _G.comment(length)
   end
 
   vim.fn.setreg('"', result) -- Copy the result to the unnamed register (clipboard)
-  vim.cmd 'normal! ""p'      -- Paste the result
+  vim.cmd('normal! ""p')     -- Paste the result
 end
 
 -- Define the function to align columns
 function _G.align()
   local p = "^%s*|%s.*%s|%s*$"
   if
-      vim.fn.exists ":Tabularize" == 1
-      and vim.fn.matchstr(vim.fn.getline ".", "^s*|") ~= -1
+      vim.fn.exists(":Tabularize") == 1
+      and vim.fn.matchstr(vim.fn.getline("."), "^s*|") ~= -1
       and (
-        vim.fn.matchstr(vim.fn.getline(vim.fn.line "." - 1), p) ~= -1
-        or vim.fn.matchstr(vim.fn.getline(vim.fn.line "." + 1), p) ~= -1
+        vim.fn.matchstr(vim.fn.getline(vim.fn.line(".") - 1), p) ~= -1
+        or vim.fn.matchstr(vim.fn.getline(vim.fn.line(".") + 1), p) ~= -1
       )
   then
     local column = string.len(vim.fn.substitute(vim.fn.getline(".", ".", true), "[^|]", "", "g"))
     local position = string.len(vim.fn.matchstr(vim.fn.getline(".", ".", true), ".*|\\s*\\zs.*"))
-    vim.cmd "Tabularize/|/l1"
-    vim.cmd "normal! 0"
-    vim.fn.search(string.rep("[^|]*|", column) .. "\\s\\{-\\}" .. string.rep(".", position), "ce", vim.fn.line ".")
+    vim.cmd("Tabularize/|/l1")
+    vim.cmd("normal! 0")
+    vim.fn.search(string.rep("[^|]*|", column) .. "\\s\\{-\\}" .. string.rep(".", position), "ce", vim.fn.line("."))
   end
 end

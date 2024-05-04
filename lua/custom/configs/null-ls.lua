@@ -9,22 +9,14 @@ local sources = {}
 
 if #vim.g.formatters_list > 0 then
   for _, fmt in pairs(vim.g.formatters_list) do
-    if fmt == "stylua" then
-      formatting[fmt].with({
-        extra_args = {
-          "--config-path",
-          vim.fn.expand("~/.config/stylua.toml"),
-        },
-      })
-    end
-    if fmt == "clang-format" then
-      formatting[fmt].with({
-        extra_args = {
-          "--config-path",
-          vim.fn.expand("~/.config/.clang_format"),
-        },
-      })
-    end
+    -- if fmt == "clang-format" then
+    --   formatting[fmt].with({
+    --     extra_args = {
+    --       "--config-path",
+    --       vim.fn.expand("~/.config/.clang_format"),
+    --     },
+    --   })
+    -- end
     table.insert(sources, formatting[fmt])
   end
 end

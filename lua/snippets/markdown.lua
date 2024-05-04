@@ -1,4 +1,4 @@
-local ls = require "snippets"
+local ls = require("snippets")
 local c = ls.c
 local f = ls.f
 local fmt = ls.fmt
@@ -11,7 +11,6 @@ local sn = ls.sn
 local parser = ls.parser
 local l = ls.l
 local copy = ls.copy
-
 
 return {
 
@@ -32,7 +31,7 @@ return {
     )
   ),
 
-  s({ trig = "$", dscr = "Expand $ into '$' or '$$'" }, {
+  s({ trig = "m", dscr = "Expand $ into '$' or '$$'" }, {
     i(0),
     c(1, {
       fmt("${}$", { i(1) }),
@@ -40,12 +39,13 @@ return {
     }),
   }),
   -- Greek letter snippets, autotriggered for efficiency
-  s({ trig = "@a" }, { t "\\alpha" }),
-  s({ trig = "@b" }, { t "\\beta" }),
-  s({ trig = "@c" }, { t "\\chi" }),
-  s({ trig = "@d" }, { t "\\delta" }),
-  s({ trig = "@g" }, { t "\\gamma" }),
-  s({ trig = "@t" }, { t "\\theta" }),
+  s({ trig = ",a" }, { t("\\alpha") }),
+  s({ trig = ",bt" }, { t("\\beta") }),
+  s({ trig = ",c" }, { t("\\chi") }),
+  s({ trig = ",d" }, { t("\\delta") }),
+  s({ trig = ",g" }, { t("\\gamma") }),
+  s({ trig = ",s" }, { t("\\sigma") }),
+  s({ trig = ",t" }, { t("\\theta") }),
 
   s(
     { trig = "begin", dscr = "Begin an environment" },
@@ -60,25 +60,22 @@ return {
   ),
 
   -- \texttt
-  s({ trig = "ftt", dscr = "Insert typewritter text" }, fmta("\\texttt{<>}", { i(1) })),
+  s({ trig = "tt", dscr = "Insert typewritter text" }, fmta("\\texttt{<>}", { i(1) })),
 
   -- \textit
-  s({ trig = "fit", dscr = "Insert  italic text" }, fmta("\\textit{<>}", { i(1, "text") })),
+  s({ trig = "it", dscr = "Insert  italic text" }, fmta("\\textit{<>}", { i(1, "text") })),
 
   -- \textbf
-  s({ trig = "fbf", dscr = "Insert bold text" }, fmta("\\textbf{<>}", { i(1, "text") })),
+  s({ trig = "bf", dscr = "Insert bold text" }, fmta("\\textbf{<>}", { i(1, "text") })),
 
   -- \textbf
-  s({ trig = "fem", dscr = "Emphasize text" }, fmta("\\emph{<>}", { i(1, "text") })),
+  s({ trig = "em", dscr = "Emphasize text" }, fmta("\\emph{<>}", { i(1, "text") })),
 
   -- \mathbf
   s({ trig = "mbf", dscr = "Math bold font" }, fmta("\\mathbf{<>}", { i(1, "text") })),
 
   -- \superscript
   s({ trig = "**", dscr = "Superscript" }, fmta("^{<>}", { i(1) })),
-
-  -- \subscript
-  s({ trig = "__", dscr = "Subscript" }, fmta("_{<>}", { i(1) })),
 
   -- \hat
   s({ trig = "^", dscr = "Hat" }, fmta("\\hat{<>}", { i(1) })),

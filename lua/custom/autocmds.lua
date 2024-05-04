@@ -1,7 +1,7 @@
 local custom = vim.api.nvim_create_augroup("CustomAutocmd", { clear = true })
 local autocmd = vim.api.nvim_create_autocmd
 
--- ------------------------ Highlight yanked text ------------------------
+--[[ Highlight yanked text  ]]
 autocmd("TextYankPost", {
   desc = "Highlight yanked text",
   pattern = "*",
@@ -11,7 +11,7 @@ autocmd("TextYankPost", {
   group = custom,
 })
 
--- ---------------------------- Execute code -------------------------
+--[[ Execute code ]]
 autocmd({ "FileType", "BufEnter" }, {
   desc = "Execute code file/block",
   pattern = { "*" },
@@ -30,15 +30,13 @@ autocmd({ "FileType", "BufEnter" }, {
     elseif vim.bo.ft == "r" then
       vim.cmd([[nnoremap <silent> <buffer> <leader><C-M> : !Rscript %<CR>]])
     elseif vim.bo.ft == "cpp" then
-      vim.cmd(
-        [[nnoremap <silent> <buffer> <leader><C-M> :w<CR>:!g++ % -o %:r && ./%:r<CR>]]
-      )
+      vim.cmd([[nnoremap <silent> <buffer> <leader><C-M> :w<CR>:!g++ % -o %:r && ./%:r<CR>]])
     end
   end,
   group = custom,
 })
 
--- ------------------------- Quick escape with q -------------------------
+--[[ Quick escape with q ]]
 autocmd({ "FileType" }, {
   group = custom,
   pattern = {
@@ -64,7 +62,7 @@ autocmd({ "FileType" }, {
   end,
 })
 
--- Fix indent blankline
+--[[ Fix indent blankline ]]
 vim.g.refreshBlankline = true
 autocmd(
   { "LspAttach" }, -- what if there is no lsp sever attach to this buffer.
@@ -73,7 +71,8 @@ autocmd(
     desc = "Refresh indent blankline on startup",
     callback = function()
       vim.defer_fn(function()
-        if vim.g.refreshBlankline then
+        -- FIX: Fixed buffer with no server attach by check if package.loaded?
+        if vim.g.refreshBlankline and package.loaded["indent_blankline"] then
           vim.cmd([[IndentBlanklineRefresh]])
           vim.g.refreshBlankline = nil
         end
@@ -83,7 +82,7 @@ autocmd(
   }
 )
 
--- ----------------- Reload indent blankline on changes --------------
+--[[ Reload indent blankline on changes ]]
 vim.g.initialColorscheme = require("core.utils").load_config().ui.theme
 vim.g.initialIndentBlank = require("core.utils").load_config().ui.blankline.blank
 vim.g.initialIndentChar = require("core.utils").load_config().ui.blankline.style
@@ -133,8 +132,10 @@ autocmd({ "BufRead" }, {
   end,
 })
 
--- ---------------------------- Highlight URL ----------------------------
-autocmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
+--[[ Highlight URL ]]
+autocmd({
+  "VimEnter", --[[ "FileType", "BufEnter", "WinEnter" ]]
+}, {
   desc = "URL Highlighting",
   group = custom,
   callback = function()
@@ -145,7 +146,7 @@ autocmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
   end,
 })
 
--- ---------------- Press dd in qflist to remove an item -------------
+--[[ Press dd in qflist to remove an item  ]]
 autocmd({ "FileType" }, {
   group = custom,
   pattern = { "qf" },
@@ -161,17 +162,11 @@ autocmd({ "FileType" }, {
     end
 
     vim.cmd("command! RemoveQFItem lua removeQFItem()")
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "dd",
-      "<cmd> RemoveQFItem <CR>",
-      { silent = true }
-    )
+    vim.api.nvim_buf_set_keymap(0, "n", "dd", "<cmd> RemoveQFItem <CR>", { silent = true })
   end,
 })
 
--- -------------------- Remove statusline on startup -----------------
+--[[ Remove statusline on startup  ]]
 vim.g.hasBufName = false
 vim.g.autocmdEnabled = true
 autocmd({ "BufRead", "FileType" }, {
@@ -184,14 +179,13 @@ autocmd({ "BufRead", "FileType" }, {
         vim.g.autocmdEnabled = false
       else
         vim.cmd([[set laststatus=0]])
-        vim.g.hasBufName = vim.api.nvim_buf_get_name(0) ~= "" and not vim.g.hasBufName
-            or vim.g.hasBufName
+        vim.g.hasBufName = vim.api.nvim_buf_get_name(0) ~= "" and not vim.g.hasBufName or vim.g.hasBufName
       end
     end
   end,
 })
 
--- ------------------------- Auto resize panels ----------------------
+--[[  Auto resize panels  ]]
 autocmd("VimResized", {
   desc = "Auto resize panes when resizing nvim window",
   group = custom,
@@ -199,62 +193,26 @@ autocmd("VimResized", {
   command = "tabdo wincmd =",
 })
 
--- --------------------- Set short keymap for nvdash ---------------------
+--[[ Set short keymap for nvdash  ]]
 autocmd({ "FileType" }, {
   pattern = { "nvdash" },
   group = custom,
   desc = "Set Nvdash short keybinds",
   callback = function()
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "f",
-      "<cmd> Telescope find_files <CR>",
-      { silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "w",
-      "<cmd> Telescope live_grep_args <CR>",
-      { silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "o",
-      "<cmd> Telescope oldfiles <CR>",
-      { silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "b",
-      "<cmd> Telescope marks <CR>",
-      { silent = true }
-    )
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "t",
-      "<cmd> Telescope themes <CR>",
-      { silent = true }
-    )
+    vim.api.nvim_buf_set_keymap(0, "n", "f", "<cmd> Telescope find_files <CR>", { silent = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "w", "<cmd> Telescope live_grep_args <CR>", { silent = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "o", "<cmd> Telescope oldfiles <CR>", { silent = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "b", "<cmd> Telescope marks <CR>", { silent = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "t", "<cmd> Telescope themes <CR>", { silent = true })
     vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd> q! <CR>", { silent = true })
     vim.api.nvim_buf_set_keymap(0, "n", "L", "<cmd> Lazy <CR>", { silent = true })
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "p",
-      "<cmd> Telescope project <CR>",
-      { silent = true }
-    )
+    vim.api.nvim_buf_set_keymap(0, "n", "p", "<cmd> Telescope project <CR>", { silent = true })
   end,
   group = custom,
 })
 
--- Restore save view
--- Taken from this https://github.com/askfiy/SimpleNvim/blob/master/lua/core/command/autocmd.lua
+--[[ Restore save view ]]
+--Credit to https://github.com/askfiy/SimpleNvim/blob/master/lua/core/command/autocmd.lua
 autocmd("BufReadPost", {
   pattern = { "*" },
   group = custom,
@@ -270,7 +228,7 @@ autocmd("BufReadPost", {
   end,
 })
 
--- --------------- Useful for hiding numbers in Iron.Repl ------------
+--[[ Handy for hiding numbers in Iron.Repl ]]
 autocmd("TermOpen", {
   pattern = "*",
   group = custom,
@@ -280,7 +238,7 @@ autocmd("TermOpen", {
   end,
 })
 
--- ------------------------------ UFO stuff ------------------------------
+--[[ UFO stuff  ]]
 autocmd("FileType", {
   pattern = { "nvcheatsheet" },
   group = custom,
@@ -322,13 +280,37 @@ autocmd("BufWinEnter", {
   end,
 })
 
--- vim.cmd([[set formatoptions-=c formatoptions-=r formatoptions-=o]])
+--[[ Turn off auto comment on next line ]]
 autocmd("FileType", {
   desc = "Disable automatic comment insertion",
   group = custom,
-  pattern = {"*"},
-  callback = function ()
+  pattern = { "*" },
+  callback = function()
     vim.cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o")
-  end
+  end,
 })
 
+--[[ Correction for Neovim colorscheme ]]
+autocmd({ "BufReadPost", "BufWritePost" }, {
+  desc = "Auto change some HL group on Neovim colorscheme",
+  group = custom,
+  pattern = { "*" },
+  callback = function()
+    local yellow = "#e4e41e"
+    local blue = "#1174b1"
+    if vim.g.nvchad_theme == "neovim" then
+      vim.cmd("highlight CursorLineNr" .. " guifg=" .. yellow)
+      vim.cmd("highlight Search" .. " guibg=" .. blue)
+      vim.cmd("highlight DiffRemoved" .. " guifg=" .. yellow)
+      vim.cmd("highlight HighlightURL gui=underline,italic guifg=#25cf6f")
+      vim.cmd("highlight UfoCustom" .. " guifg=" .. "#25f0ff" .. " guibg=none")
+    elseif vim.g.nvchad_theme == "github_official" then
+      vim.cmd("highlight HighlightURL gui=underline,italic guifg=#1174b1")
+      vim.cmd("highlight UfoCustom" .. " guifg=" .. "#a5d3fb" .. " guibg=none")
+      vim.cmd("highlight Search" .. " guibg=" .. "#a5d3fb")
+    else
+      vim.cmd("highlight UfoCustom" .. " guifg=" .. "#aaadae" .. " guibg=none")
+
+    end
+  end,
+})

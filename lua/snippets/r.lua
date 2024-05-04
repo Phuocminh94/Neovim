@@ -6,7 +6,7 @@ local s = ls.s
 
 return {
   s(
-    { trig = "var", "create variable" },
+    { trig = "var", "Variable" },
     c(1, {
       fmt("{} <- {}", { i(1, "name"), i(2, "value") }),
       fmt("{} = {}", { i(1, "name"), i(2, "value") }),

@@ -3,11 +3,9 @@ local opts = { silent = true }
 return {
   general = {
     n = {
+
       -- change without yank
       ["c"] = { '"_c', "Change without yanking" },
-
-      -- load last session
-      ["<leader>ll"] = { "<cmd> SessionLoadLast <CR>", "Load last session" },
 
       -- swap lines
       ["<A-j>"] = { ":m .+1<CR>==", "Swap below", opts = opts },
@@ -15,6 +13,9 @@ return {
 
       -- open link in defaukt browser
       ["gx"] = { "<cmd>silent !xdg-open <cfile><CR>", "Open link in browser" },
+
+      -- markdown preview
+      ["<leader>md"] = { "<cmd>MarkdownPreview<CR>", "Markdown preview" },
 
       -- buffer
       ["<Tab>"] = { "<cmd> e# <CR>", "Alternative buffer" },
@@ -38,8 +39,8 @@ return {
       -- change cwd
       ["<leader>cd"] = {
         function()
-          vim.cmd [[execute 'set autochdir']]
-          vim.cmd [[execute 'tcd '. expand('%:p:h')]]
+          vim.cmd([[execute 'set autochdir']])
+          vim.cmd([[execute 'tcd '. expand('%:p:h')]])
         end,
         "Change cwd",
         opts = { silent = true, noremap = true },
@@ -90,6 +91,7 @@ return {
 
       ["\\\\d"] = { "<Plug>(VM-Duplicate)", "Multicursor duplicate" },
       ["\\\\y"] = { "<Plug>(VM-Yank)", "Multicursor Yank" },
+      ["\\\\p"] = { "<Plug>(VM-Paste)", "Multicursor Paste" },
     },
   },
 
@@ -155,7 +157,7 @@ return {
       -- conditional breakpoint
       ["<leader>dC"] = {
         function()
-          require("dap").set_breakpoint(vim.fn.input "Condition: ")
+          require("dap").set_breakpoint(vim.fn.input("Condition: "))
         end,
         "Conditional Breakpoint (S-F9)",
       },

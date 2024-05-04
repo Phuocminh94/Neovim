@@ -178,7 +178,8 @@ M.LSP_status = function()
     return ok and parsers.has_parser(parsers.get_buf_lang(bufnr or vim.api.nvim_get_current_buf())) or nil
   end
 
-  local TS = (treesitter_available(0) and (vim.bo[0].syntax == "" or vim.bo[0].syntax == "on")) and "🌳" or nil
+  -- local TS = (treesitter_available(0) and (vim.bo[0].syntax == "" or vim.bo[0].syntax == "on")) and "🌳" or nil
+  local TS = (treesitter_available(0) and (vim.bo[0].syntax == "" or vim.bo[0].syntax == "on")) and "✨" or nil
 
   -- has at least one client or treesitter available
   if #buf_clients == 0 and #buf_client_names == 0 then

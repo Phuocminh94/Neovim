@@ -1,11 +1,17 @@
--- vim.cmd("highlight UfoCustom" .. " guifg='#1174b1'") -- same Hop color
--- vim.cmd("highlight UfoCustom" .. " guifg='#1BFF00'") -- same Hop color
--- vim.cmd("highlight UfoCustom" .. " guifg='#1174b1'") -- same Hop color
-vim.cmd("highlight UfoCustom" .. " guifg='#ff007c'") -- same Hop color
 -- vim.api.nvim_set_hl(0, "UfoCustom", { link = "Visual" })
+-- some good colors for folding: #1174b1, #1BFF00, #FF007C, #76A99C, #a1d1be, #f22f99
+
+local function setUfoColor(arg)
+  default_opts = { fg = "#ff8c00", bg = "none" }
+  default_opts = arg and extend_tbl(default_opts, arg) or default_opts
+  vim.cmd("highlight UfoCustom" .. " guifg=" .. default_opts.fg .. " guibg=" .. default_opts.bg)
+end
+
+setUfoColor({ fg = "#aaadae" })
 
 local handler = function(virtText, lnum, endLnum, width, truncate)
   local newVirtText = {}
+  -- local suffix = (" 󰡏 %d "):format(endLnum - lnum)
   local suffix = (" 󰡏 %d "):format(endLnum - lnum)
   local sufWidth = vim.fn.strdisplaywidth(suffix)
   local targetWidth = width - sufWidth
@@ -34,10 +40,10 @@ end
 
 local ok, ufo = pcall(require, "ufo")
 if ok then
-  ufo.setup {
+  ufo.setup({
     fold_virt_text_handler = handler,
     provider_selector = function(bufnr, filetype, buftype)
       return { "treesitter", "indent" }
     end,
-  }
+  })
 end

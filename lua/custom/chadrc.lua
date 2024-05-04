@@ -3,23 +3,32 @@ local M = {}
 
 M.ui = {
 
-  -- =============================== general ===============================
+  --[[ General ]]
   blankline = { style = "rainbow", blank = true }, -- style: rainbow/nil, blank = true/false
   cmp = { style = "atom" },
-  extended_integrations = { "dap", "rainbowdelimiters", "trouble", "todo" },
+  extended_integrations = { "dap", "rainbowdelimiters", "todo" },
   hl_override = {
-    CursorLine = { bg = "black2" },
     CursorLineNr = { fg = "yellow" },
     FoldColumn = { bg = "none", fg = "lightbg" },
     LspReferenceRead = { bg = "lightbg", fg = "none" },
     LspReferenceText = { bg = "lightbg", fg = "none" }, -- same Visual highlight but lighter
     LspReferenceWrite = { bg = "lightbg", fg = "none" },
-    NvDashAscii = { bg = "green" },
+    NvDashAscii = { bg = "red" },
+    TodoBgFix = { fg = "#00dfff", bg = "none" },
+    TodoBgHack = { fg = "#ff007c", bg = "none" },
+    TodoBgNote = { fg = "#8fa025", bg = "none" },
+    TodoBgTodo = { fg = "#ff8c00", bg = "none" },
+    TodoBgWarn = { fg = "#f02d0f", bg = "none" },
+    TodoFgFix = { fg = "#00dfff" },
+    TodoFgHack = { fg = "#ff007c" },
+    TodoFgNote = { fg = "#8fa025" },
+    TodoFgTodo = { fg = "#ff8c00" },
+    TodoFgWarn = { fg = "#f02d0f" },
   },
-  theme_toggle = { "gruvchad", "gruvchad" },
-  theme = "gruvchad",
+  theme_toggle = { "neovim", "neovim" },
+  theme = "neovim",
 
-  -- ============================= statusline ==========================
+  --[[ Stline ]]
   statusline = {
     theme = "vscode",
     overriden_modules = function(modules)
@@ -36,7 +45,7 @@ M.ui = {
     end,
   },
 
-  -- ============================== dashboard ==============================
+  --[[ Dashboard ]]
   nvdash = {
     header = {
       [[ ╓─────────────────────────────────────╖ ]],

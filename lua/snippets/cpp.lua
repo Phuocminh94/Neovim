@@ -1,4 +1,4 @@
-local ls = require "snippets"
+local ls = require("snippets")
 local c = ls.c
 local fmt = ls.fmt
 local i = ls.i
@@ -40,5 +40,5 @@ return {
   s({ trig = "#", dscr = "import" }, fmt("#include <{}>", { i(1, "package") })),
 
   -- var
-  s({trig = "var", dscr="variable"}, fmt("{}{} = {}", {i(0, ""), i(1, "name"), i(2, "value")})),
+  s({ trig = "var", dscr = "variable" }, fmt("{}{} = {}", { i(0, ""), i(1, "name"), i(2, "value") })),
 }

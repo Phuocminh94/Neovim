@@ -2,15 +2,16 @@
 local opt = vim.opt
 local g = vim.g
 
--- ------------------------------- globals -------------------------------
+-- =============================== globals ===============================
 g.dap_list = { "python", "cpp" }
 g.formatters_list = {
-  "stylua",
   "black",
-  "isort",
   "clang_format",
+  "isort",
+  "prettierd",
+  "stylua",
 }
-g.conform_list = {
+g.conform_list = { -- deprecated
   lua = { "stylua" },
   python = { "isort", "black" },
   cpp = { "clang_format" },
@@ -26,7 +27,7 @@ g.toggle_barbecue = true
 g.lua_snippets_path = "~/.config/nvim/lua/snippets/"
 g.personal_note_path = "/mnt/c/Users/PhuocMinh/iCloudDrive/iCloud~md~obsidian/Notes/Personal/vim-todo.md"
 
--- ------------------------------- options -------------------------------
+-- =============================== options ===============================
 opt.foldcolumn = "1"
 opt.foldenable = true
 opt.foldlevel = 99
@@ -38,9 +39,9 @@ opt.fillchars = {
   foldsep = " ",
   foldclose = "›",
 }
-opt.history = 100 -- number of commands to remember in a history table
-opt.number = true -- show numberline
+opt.history = 100         -- number of commands to remember in a history table
+opt.number = true         -- show numberline
 opt.relativenumber = true -- show relative numberline
 opt.swapfile = false
-opt.wrap = false -- disable wrapping of lines longer than the width of window
-opt.writebackup = false -- disable making a backup before overwriting a fileopt.writebackup = false   -- disable making a backup before overwriting a file
+opt.wrap = false          -- disable wrapping of lines longer than the width of window
+opt.writebackup = false   -- disable making a backup before overwriting a fileopt.writebackup = false   -- disable making a backup before overwriting a file

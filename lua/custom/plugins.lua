@@ -47,7 +47,19 @@ return {
     init = function()
       vim.cmd("highlight MarkSignNumHL" .. " guifg='#ff007c'")
     end,
-    config = true,
+    config = function()
+      require("marks").setup({
+        default_mappings = true,
+        mappings = {
+          delete = "dm",
+          delete_line = "dml",
+          next = "m]",
+          prev = "m[",
+          preview = "mp",
+          set = "m",
+        },
+      })
+    end,
   },
 
   {
@@ -56,8 +68,7 @@ return {
     opts = { default_mappings = true },
   },
 
-
---[[ Text-editing ]]
+  --[[ Text-editing ]]
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -74,15 +85,19 @@ return {
   {
     "mg979/vim-visual-multi",
     event = "BufRead",
+    enabled = true,
     init = function()
-      -- vim.cmd("highlight VisualMulti" .. " guibg='#ff007c'" .. " guifg='#ffffff'") -- same Hop color
-      vim.api.nvim_set_hl(0, "VisualMulti", { link = "Visual" })
+      vim.cmd("highlight VisualMulti" .. " guibg='#3e3f53'" .. " guifg='#ff007c'") -- same Hop color
+      -- vim.api.nvim_set_hl(0, "VisualMulti", { link = "Visual" })
+      vim.api.nvim_set_hl(0, "VM_Mono", { link = "VisualMulti" })
+      vim.api.nvim_set_hl(0, "VM_Extend", { link = "VisualMulti" })
+      vim.api.nvim_set_hl(0, "VM_Cursor", { link = "VisualMulti" })
       vim.cmd([[let g:VM_default_mappings = 0]])
-      vim.cmd([[let g:VM_Mono_hl = "VisualMulti"]])
-      vim.cmd([[let g:VM_Extend_hl = "VisualMulti"]])
-      vim.cmd([[let g:VM_Cursor_hl = "VisualMulti"]])
       vim.cmd([[let g:VM_mouse_mappings = 1]])
       vim.cmd([[let g:VM_leader = '\\\\']])
+      vim.cmd([[ let g:VM_set_statusline = 0 ]])
+      vim.cmd([[ let g:VM_show_warnings = 0 ]])
+      vim.cmd([[ let g:VM_silent_exit = 1 ]])
     end,
   },
 
@@ -96,8 +111,7 @@ return {
     keys = { "ga" },
   },
 
-
---[[ Terminal ]]
+  --[[ Terminal ]]
   {
     "voldikss/vim-floaterm",
     enabled = false,
@@ -127,8 +141,7 @@ return {
     end,
   },
 
-
---[[ Git ]]
+  --[[ Git ]]
   {
     "tpope/vim-fugitive",
     cmd = { "Git" },
@@ -148,8 +161,7 @@ return {
     },
   },
 
-
---[[ DAP ]]
+  --[[ DAP ]]
   {
     "mfussenegger/nvim-dap",
     cmd = { "DapToggleBreakpoint", "DapContinue" },
@@ -166,8 +178,7 @@ return {
     end,
   },
 
-
---[[ Folding ]]
+  --[[ Folding ]]
   {
     "kevinhwang91/nvim-ufo",
     keys = { "zr", "zm", "za", "zo", "[z", "]z" },
@@ -213,23 +224,12 @@ return {
     },
     config = function()
       require("custom.configs.ufo")
-      vim.keymap.set(
-        "n",
-        "zj",
-        "<cmd>lua next_closed_fold('j') <CR>",
-        { desc = "Previous closed fold" }
-      )
-      vim.keymap.set(
-        "n",
-        "zk",
-        "<cmd>lua next_closed_fold('k') <CR>",
-        { desc = "Next closed fold" }
-      )
+      vim.keymap.set("n", "zj", "<cmd>lua next_closed_fold('j') <CR>", { desc = "Previous closed fold" })
+      vim.keymap.set("n", "zk", "<cmd>lua next_closed_fold('k') <CR>", { desc = "Next closed fold" })
     end,
   },
 
-
---[[ REPL ]]
+  --[[ REPL ]]
   {
     "hkupty/iron.nvim",
     cmd = { "IronRepl", "IronRestart", "IronFocus", "IronHide" },
@@ -241,8 +241,7 @@ return {
     end,
   },
 
-
---[[ UI ]]
+  --[[ UI ]]
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -255,12 +254,6 @@ return {
         before = "fg",  -- "fg" or "bg" or empty
         keyword = "fg", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
         after = "fg",   -- "fg" or "bg" or empty
-      },
-      colors = {
-        info = {"#ff8c00"}, -- TODO
-        hint = {"#8fa025"}, -- NOTE
-        warning = {"#f02d0f"}, -- WARNING
-        error = {"#2f74b4"} -- FIX
       },
     },
   },
@@ -299,12 +292,7 @@ return {
     cmd = { "UndotreeToggle" },
     keys = { "<leader>ut" },
     config = function()
-      vim.keymap.set(
-        { "i", "n", "v" },
-        "<leader>ut",
-        ":UndotreeToggle<CR>",
-        { desc = "Toggle undotree" }
-      )
+      vim.keymap.set({ "i", "n", "v" }, "<leader>ut", ":UndotreeToggle<CR>", { desc = "Toggle undotree" })
     end,
   },
 
@@ -347,36 +335,11 @@ return {
     },
     config = function(_, opts)
       require("comment-box").setup(opts)
-      vim.keymap.set(
-        { "n", "v" },
-        "<leader>cbb",
-        "<cmd>lua require 'comment-box'.cabox(9)<CR>",
-        key_opts
-      )
-      vim.keymap.set(
-        { "n", "v" },
-        "<leader>cbl",
-        "<cmd>lua require 'comment-box'.lcline()<CR>",
-        key_opts
-      )
-      vim.keymap.set(
-        { "n", "v" },
-        "<leader>cbd",
-        "<cmd>lua require('comment-box').dbox()<CR>",
-        key_opts
-      )
-      vim.keymap.set(
-        { "n", "v" },
-        "<leader>cby",
-        "<cmd>lua require('comment-box').yank()<CR>",
-        key_opts
-      )
-      vim.keymap.set(
-        { "n" },
-        "<leader>cba",
-        "<cmd>lua require('comment-box').catalog()<CR>",
-        key_opts
-      )
+      vim.keymap.set({ "n", "v" }, "<leader>cbb", "<cmd>lua require 'comment-box'.cabox(9)<CR>", key_opts)
+      vim.keymap.set({ "n", "v" }, "<leader>cbl", "<cmd>lua require 'comment-box'.lcline()<CR>", key_opts)
+      vim.keymap.set({ "n", "v" }, "<leader>cbd", "<cmd>lua require('comment-box').dbox()<CR>", key_opts)
+      vim.keymap.set({ "n", "v" }, "<leader>cby", "<cmd>lua require('comment-box').yank()<CR>", key_opts)
+      vim.keymap.set({ "n" }, "<leader>cba", "<cmd>lua require('comment-box').catalog()<CR>", key_opts)
     end,
   },
 
@@ -389,8 +352,7 @@ return {
     end,
   },
 
-
---[[ Filetype ]]
+  --[[ Filetype ]]
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -401,34 +363,9 @@ return {
     end,
   },
 
+  --[[ Session ]]
 
---[[ Session ]]
-  {
-    "olimorris/persisted.nvim",
-    cmd = {
-      "SessionToggle",
-      "SessionStart",
-      "SessionStop",
-      "SessionSave",
-      "SessionLoad",
-      "SessionLoadLast",
-      "SessionDelete",
-    },
-    config = function()
-      require("persisted").setup({
-        should_autosave = function()
-          -- do not autosave if the alpha dashboard is the current filetype
-          if vim.bo.filetype == "nvdash" then
-            return false
-          end
-          return true
-        end,
-      })
-    end,
-  },
-
-
---[[ Code assistant ]]
+  --[[ Code assistant ]]
   {
     "siawkz/nvim-cheatsh",
     cmd = { "Cheat" },
@@ -437,5 +374,4 @@ return {
     },
     config = true,
   },
-
 }
