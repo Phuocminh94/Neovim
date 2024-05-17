@@ -12,7 +12,7 @@ return {
       ["<A-k>"] = { ":m .-2<CR>==", "Swap above", opts = opts },
 
       -- open link in defaukt browser
-      ["gx"] = { "<cmd>silent !xdg-open <cfile><CR>", "Open link in browser" },
+      ["gx"] = { "<cmd>silent !open <cfile><CR>", "Open link in browser" },
 
       -- markdown preview
       ["<leader>md"] = { "<cmd>MarkdownPreview<CR>", "Markdown preview" },

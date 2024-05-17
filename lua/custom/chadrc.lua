@@ -25,8 +25,8 @@ M.ui = {
     TodoFgTodo = { fg = "#ff8c00" },
     TodoFgWarn = { fg = "#f02d0f" },
   },
-  theme_toggle = { "neovim", "neovim" },
-  theme = "neovim",
+  theme_toggle = { "onedark", "onedark" },
+  theme = "onedark",
 
   --[[ Stline ]]
   statusline = {
@@ -61,7 +61,7 @@ M.ui = {
       [[ ╙─────────────────────────────────────╜ ]],
     },
     buttons = {
-      { "  Find Files", "f", "Telescope find_files" },
+      { "󱙔  Find Files", "f", "Telescope find_files" },
       { "󱦺  Recent Files", "o", "Telescope oldfiles" },
       { "  Find Text", "w", "Telescope live_grep_args" },
       { "  Bookmarks", "b", "Telescope marks" },

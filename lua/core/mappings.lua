@@ -485,7 +485,7 @@ M.telescope = {
     ["<leader>fn"] = {
       function()
         require("telescope.builtin").find_files({
-          cwd = "/mnt/c/Users/PhuocMinh/iCloudDrive/iCloud~md~obsidian/Notes",
+          cwd = "/Users/phuocminh/Library/Mobile Documents/iCloud~md~obsidian/Documents/Notes",
         })
       end,
       "Find personal notes",

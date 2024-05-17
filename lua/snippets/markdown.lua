@@ -13,6 +13,17 @@ local l = ls.l
 local copy = ls.copy
 
 return {
+  s(
+    { trig = "kbd", dscr = "html keyboard" },
+    fmt(
+      [[
+      <kbd>{}</kbd>
+    ]],
+      {
+        i(1)
+      }
+    )
+  ),
 
   s(
     { trig = "mat", dscr = "Insert matrix" },

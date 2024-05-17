@@ -72,8 +72,8 @@ M.others = function()
   if vim.v.hlsearch ~= 0 then
     local sinfo = vim.fn.searchcount { maxcount = 0 }
     if not (sinfo.incomplete == nil or sinfo.total == nil) then -- would throw errors in lazy installing new plugin without this line.
-      search_stat = sinfo.incomplete > 0 and " [?/?]"
-          or sinfo.total > 0 and (" [%s/%s]"):format(sinfo.current, sinfo.total)
+      search_stat = sinfo.incomplete > 0 and "🔍 [?/?]"
+          or sinfo.total > 0 and ("🔍 [%s/%s]"):format(sinfo.current, sinfo.total)
           or nil
     end
   end
